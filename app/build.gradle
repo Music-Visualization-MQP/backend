@@ -27,6 +27,9 @@ dependencies {
     // This dependency is used by the application.
     implementation 'jakarta.ws.rs:jakarta.ws.rs-api:3.1.0'
     implementation 'org.apache.cxf:cxf-rt-frontend-jaxrs:4.0.1'
+    implementation 'org.apache.cxf:cxf-rt-transports-http:4.0.1'
+    implementation 'org.apache.cxf:cxf-rt-transports-http-jetty:4.0.1'
+
     implementation 'mysql:mysql-connector-java:8.0.33'
 }
 
