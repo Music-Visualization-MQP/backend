@@ -1,9 +1,8 @@
 package collageify.user;
 
-import collageify.exception.InvalidNameOptionException;
+import collageify.exception.InvalidOptionException;
 
 public interface iUser {
-    void addUser(String username, String email, String password, String firstName, String lastname);
     void resetPassword(String username, String email);
     void setUsername(String username);
     void setEmail(String email);
@@ -12,7 +11,10 @@ public interface iUser {
 
     String getUsername();
     String getEmail();
-    String getName(int option) throws InvalidNameOptionException;
+    String getPassword();
+    String getName(int option) throws InvalidOptionException;
+
+    void UpdateDB() throws Exception;
     
 
 

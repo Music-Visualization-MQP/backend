@@ -1,20 +1,23 @@
 package collageify.user;
 
 
-import collageify.exception.InvalidNameOptionException;
+import collageify.db.MySQLAccess;
+import collageify.exception.InvalidOptionException;
 public class User implements iUser{
     private String username;
     private String password;
     private String email;
     private String firstName;
     private String lastName; 
-    @Override
-    public void addUser(String username, String email, String password, String firstName, String lastname) {
+    public User(String username, String email, String password, String firstName, String lastname) {
         this.email = email;
         this.username = username;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastname;
+    }
+    User(){
+
     }
     @Override
     public void resetPassword(String username, String email) {
@@ -32,7 +35,7 @@ public class User implements iUser{
     @Override
     public String getEmail() { return this.email; }
     @Override
-    public String getName(int option) throws InvalidNameOptionException {
+    public String getName(int option) throws InvalidOptionException {
         try{
             switch (option) {
                 case 0:
@@ -42,7 +45,7 @@ public class User implements iUser{
                 case 2:
                     return this.lastName;
                 default:
-                    throw new InvalidNameOptionException(option);
+                    throw new InvalidOptionException(option);
     
             }
         } catch (Exception e){
@@ -54,7 +57,18 @@ public class User implements iUser{
         this.firstName = first;
         this.lastName = last;
     }
-    
-    
-    
+    @Override
+    public String getPassword() { return this.password; }
+
+    @Override
+    public void UpdateDB() throws Exception{
+        MySQLAccess  sql = new MySQLAccess();
+            try{
+                sql.estConnection();
+                sql.addUser(this);
+            } catch (Exception e){
+                throw e;
+            }
+
+    }
 }
