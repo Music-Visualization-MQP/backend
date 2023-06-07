@@ -8,6 +8,10 @@ import java.sql.Statement;
 import java.util.Date;
 import java.util.Optional;
 
+import javax.swing.text.html.Option;
+
+import collageify.user.User;
+
 public class MySQLAccess implements IDBAccess {
     private Connection connect = null;
     private Statement statement = null;
@@ -194,6 +198,12 @@ public class MySQLAccess implements IDBAccess {
     public void getTrackPlayedPublic() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getTrackPlayedPublic'");
+    }
+
+    @Override
+    public void addUser(User user) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'addUser'");
     }
 
 }
