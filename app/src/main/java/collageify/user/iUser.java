@@ -1,6 +1,6 @@
 package collageify.user;
 
-import collageify.exception.InvalidOptionException;
+import collageify.exceptions.InvalidOptionException;
 
 public interface iUser {
     void resetPassword(String username, String email);

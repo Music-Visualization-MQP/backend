@@ -10,8 +10,8 @@ import java.util.Optional;
 
 import javax.swing.text.html.Option;
 
+import collageify.exceptions.InvalidOptionException;
 import collageify.user.User;
-import collageify.exception.InvalidOptionException;
 
 public class MySQLAccess implements IDBAccess {
     private Connection connect = null;
@@ -76,6 +76,7 @@ public class MySQLAccess implements IDBAccess {
             // Setup the connection with the DB
             connect = DriverManager
                     .getConnection(System.getenv("DB_ADDRESS"), System.getenv("DB_USER"), System.getenv("DB_PW"));
+                    
         } catch (Exception e) {
             throw e;
         }

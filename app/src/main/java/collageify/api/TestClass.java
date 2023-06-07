@@ -1,4 +1,4 @@
-package collageify.web;
+package collageify.api;
 
 
 import jakarta.ws.rs.GET;
@@ -8,7 +8,7 @@ import jakarta.ws.rs.core.MediaType;
 
 
 
-@Path("/hello")
+@Path("/api")
 public class TestClass {
     @GET
     @Produces(MediaType.TEXT_PLAIN)

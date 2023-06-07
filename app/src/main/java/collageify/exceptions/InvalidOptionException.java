@@ -1,4 +1,4 @@
-package collageify.exception;
+package collageify.exceptions;
 
 public class InvalidOptionException extends Exception {
     public InvalidOptionException(int option){

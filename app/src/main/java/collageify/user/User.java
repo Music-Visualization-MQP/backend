@@ -2,7 +2,7 @@ package collageify.user;
 
 
 import collageify.db.MySQLAccess;
-import collageify.exception.InvalidOptionException;
+import collageify.exceptions.InvalidOptionException;
 public class User implements iUser{
     private String username;
     private String password;
