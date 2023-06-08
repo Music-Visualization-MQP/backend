@@ -1,8 +1,10 @@
 package collageify.auth;
 
+import collageify.db.MySQLAccess;
+
 public class LoginAttempt {
     private String email;
-    private String pw;
+    private String password;
 
     // Empty constructor required for deserialization
     public LoginAttempt() {
@@ -17,10 +19,15 @@ public class LoginAttempt {
     }
 
     public String getPw() {
-        return pw;
+        return password;
     }
 
-    public void setPw(String pw) {
-        this.pw = pw;
+    public void setPassword(String pw) {
+        this.password = pw;
+    }
+    public void CheckDB() throws Exception {
+            MySQLAccess sql = new MySQLAccess();
+            sql.estConnection();
+            sql.getAccount(this);
     }
 }

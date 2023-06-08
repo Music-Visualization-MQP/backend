@@ -2,7 +2,6 @@ package collageify.musicService;
 import collageify.db.MySQLAccess;
 
 public class Playing {
-    
     private Integer userID;
     private String username;
 

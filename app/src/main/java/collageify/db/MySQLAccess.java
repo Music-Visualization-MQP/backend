@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import javax.swing.text.html.Option;
 
+import collageify.auth.LoginAttempt;
 import collageify.exceptions.InvalidOptionException;
 import collageify.user.User;
 
@@ -172,6 +173,29 @@ public class MySQLAccess implements IDBAccess {
             close();
         }
         
+    }
+
+    @Override
+    public void getAccount(LoginAttempt loginAttempt) throws Exception {
+        String email = loginAttempt.getEmail();
+        String password = loginAttempt.getPw();
+        try{
+            resultSet = connect.createStatement().executeQuery("SELECT COUNT(*) FROM users WHERE email = '"+ email + "';");
+            if(resultSet.next()){
+                System.out.println("yes");
+
+            }else{
+                System.out.println("no");
+
+            }
+        }catch(Exception e) {
+            throw e;
+        } finally {
+            close();
+        }
+
+
+
     }
 
 }

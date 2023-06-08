@@ -4,6 +4,7 @@ package collageify.api;
 import java.io.IOException;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerResponseContext;
@@ -16,6 +17,11 @@ import collageify.auth.LoginAttempt;
 
 @Path("/api")
 public class TestClass {
+    private ObjectMapper objectMapper;
+
+    public TestClass(){
+        objectMapper = new ObjectMapper();
+    }
 
 
 
@@ -32,9 +38,18 @@ public class TestClass {
     @Path("/login")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String loginAttempt(LoginAttempt loginAttempt) {
-        System.out.println("hehe");
-        return loginAttempt.getEmail();
+    public String loginAttempt(String data) {
+        try{
+
+            LoginAttempt loginAttempt = objectMapper.readValue(data, LoginAttempt.class);
+            System.out.println(loginAttempt.getEmail());
+            loginAttempt.CheckDB();
+            return loginAttempt.getEmail();
+        } catch(Exception e){
+            e.printStackTrace();
+            return "get fucked";
+
+        }
 
 
 
