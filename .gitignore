@@ -41,3 +41,12 @@ gradle-app.setting
 
 # End of https://www.gitignore.io/api/java,gradle
 init-jenv.sh
+/app/src/main/java/collageify/db/buildOutputCleanup/buildOutputCleanup.lock
+/app/src/main/java/collageify/db/buildOutputCleanup/cache.properties
+/.idea/compiler.xml
+/.idea/gradle.xml
+/.idea/jarRepositories.xml
+/.idea/misc.xml
+/app/src/main/java/collageify/db/buildOutputCleanup/outputFiles.bin
+/.idea/vcs.xml
+/.idea/workspace.xml
