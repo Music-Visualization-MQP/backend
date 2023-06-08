@@ -29,8 +29,10 @@ dependencies {
     implementation 'org.apache.cxf:cxf-rt-frontend-jaxrs:4.0.1'
     implementation 'org.apache.cxf:cxf-rt-transports-http:4.0.1'
     implementation 'org.apache.cxf:cxf-rt-transports-http-jetty:4.0.1'
-
     implementation 'mysql:mysql-connector-java:8.0.33'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+    implementation 'se.michaelthelin.spotify:spotify-web-api-java:8.0.0'
+
 }
 
 jar {
