@@ -8,6 +8,7 @@ import collageify.api.TestClass;
 import collageify.db.SQLTime;
 import collageify.musicService.Playing;
 import collageify.user.User;
+import collageify.api.CorsFilter;
 
 
 
@@ -24,20 +25,18 @@ public class App {
         /* User user = new User("ldoggs","lawhitley@gmail.com", "somethingEmbarassing", "Laurel", "Whitley");
         user.UpdateDB();
          */
-        JAXRSServerFactoryBean factoryBean = new JAXRSServerFactoryBean();   
-        try{
-            factoryBean.setResourceClasses(collageify.api.TestClass.class);
-            
-            factoryBean.setResourceProvider(collageify.api.TestClass.class, new SingletonResourceProvider(new TestClass()));
-            
-            factoryBean.setAddress("http://localhost:8081/");
-            
-            factoryBean.create();   
-            System.out.println("Server started at http://localhost:80/"); 
+        JAXRSServerFactoryBean factoryBean = new JAXRSServerFactoryBean();
+        factoryBean.setResourceClasses(TestClass.class);
 
-        } catch (Exception e){
-            throw e;
-        }
+
+        factoryBean.setResourceProvider(TestClass.class, new SingletonResourceProvider(new TestClass()));
+        factoryBean.setProvider(new CorsFilter());
+
+        factoryBean.setAddress("http://localhost:8080/");
+
+        factoryBean.create();
+        System.out.println("Server started at http://localhost:80/");
+
     }
 
 }

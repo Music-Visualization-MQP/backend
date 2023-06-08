@@ -41,3 +41,5 @@ gradle-app.setting
 
 # End of https://www.gitignore.io/api/java,gradle
 init-jenv.sh
+/shelf/
+/workspace.xml
