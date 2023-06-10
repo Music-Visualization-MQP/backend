@@ -3,6 +3,9 @@ import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.credentials.ClientCredentials;
 import se.michaelthelin.spotify.requests.authorization.client_credentials.ClientCredentialsRequest;
+import se.michaelthelin.spotify.model_objects.specification.Track;
+import se.michaelthelin.spotify.model_objects.specification.Album;
+import se.michaelthelin.spotify.requests.data.tracks.GetTrackRequest;
 import org.apache.hc.core5.http.ParseException;
 
 import java.io.IOException;
@@ -18,14 +21,16 @@ public class SpClientCredentials {
             .build();
     private static final ClientCredentialsRequest clientCredentialsRequest = spotifyApi.clientCredentials()
             .build();
-    public static void clientCredentials_Sync() {
+    public static void clientCredentials_Sync(String id) {
         try {
             final ClientCredentials clientCredentials = clientCredentialsRequest.execute();
+            spotifyApi.setAccessToken(clientCredentials.getAccessToken());
+            final GetTrackRequest getTrackRequest = spotifyApi.getTrack(id).build();
+            final Track track = getTrackRequest.execute();
 
             // Set access token for further "spotifyApi" object usage
-            spotifyApi.setAccessToken(clientCredentials.getAccessToken());
 
-            System.out.println("Expires in: " + clientCredentials.getExpiresIn());
+            System.out.println("Expires in: " + clientCredentials.getExpiresIn() + track.getAlbum().getName());
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             System.out.println("Error: " + e.getMessage());
         }

@@ -9,7 +9,7 @@ import collageify.db.SQLTime;
 import collageify.musicService.Playing;
 import collageify.user.User;
 import collageify.api.CorsFilter;
-
+import collageify.musicService.SpClientCredentials;
 
 
 
@@ -22,6 +22,9 @@ public class App {
         System.out.println(time.getTime());
         song.UpdateProgress(165000);
         song.UpdateDB();
+        SpClientCredentials.clientCredentials_Sync("1DXD0wVXXHwUYo9AXbcMMI");
+
+
         /* User user = new User("ldoggs","lawhitley@gmail.com", "somethingEmbarassing", "Laurel", "Whitley");
         user.UpdateDB();
          */
