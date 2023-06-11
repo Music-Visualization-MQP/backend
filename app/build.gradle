@@ -9,6 +9,8 @@
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     id 'java'
+    id 'org.springframework.boot' version '3.1.0'
+    id 'io.spring.dependency-management' version '1.1.0'
     id 'application'
 }
 group 'collageify'
@@ -17,6 +19,8 @@ version '1.0'
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()
+    maven { url 'https://repo.spring.io/milestone' }
+    maven { url 'https://repo.spring.io/snapshot' }
 }
 
 dependencies {
@@ -24,14 +28,29 @@ dependencies {
     // Use JUnit Jupiter for testing.
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.1'
 
+
+    // you need to clean these up at some point
     // This dependency is used by the application.
     implementation 'jakarta.ws.rs:jakarta.ws.rs-api:3.1.0'
+    implementation 'jakarta.servlet:jakarta.servlet-api:6.0.0'
     implementation 'org.apache.cxf:cxf-rt-frontend-jaxrs:4.0.1'
     implementation 'org.apache.cxf:cxf-rt-transports-http:4.0.1'
     implementation 'org.apache.cxf:cxf-rt-transports-http-jetty:4.0.1'
     implementation 'mysql:mysql-connector-java:8.0.33'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
     implementation 'se.michaelthelin.spotify:spotify-web-api-java:8.0.0'
+
+    //springboot
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    compileOnly 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+
+
 
 }
 

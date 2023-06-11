@@ -7,7 +7,9 @@ public class LoginAttempt {
     private String password;
 
     // Empty constructor required for deserialization
-    public LoginAttempt() {
+    public LoginAttempt(String email, String password) {
+        this.email = email;
+        this.password = password;
     }
 
     public String getEmail() {
@@ -25,9 +27,9 @@ public class LoginAttempt {
     public void setPassword(String pw) {
         this.password = pw;
     }
-    public void CheckDB() throws Exception {
+    public boolean CheckDB() throws Exception {
             MySQLAccess sql = new MySQLAccess();
             sql.estConnection();
-            sql.getAccount(this);
+            return sql.getAccount(this);
     }
 }

@@ -2,12 +2,10 @@ package collageify;
 
 import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
 import org.apache.cxf.jaxrs.lifecycle.SingletonResourceProvider;
-import org.apache.cxf.transport.http.*;
 
 import collageify.api.TestClass;
 import collageify.db.SQLTime;
 import collageify.musicService.Playing;
-import collageify.user.User;
 import collageify.api.CorsFilter;
 import collageify.musicService.SpClientCredentials;
 

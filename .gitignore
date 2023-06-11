@@ -50,3 +50,6 @@ init-jenv.sh
 /app/src/main/java/collageify/db/buildOutputCleanup/outputFiles.bin
 /.idea/vcs.xml
 /.idea/workspace.xml
+/.idea/modules/app/collageify.app.main.iml
+/.idea/modules.xml
+/.idea/uiDesigner.xml

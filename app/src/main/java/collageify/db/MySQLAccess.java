@@ -3,16 +3,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Date;
 import java.util.Optional;
-
-import javax.swing.text.html.Option;
 
 import collageify.auth.LoginAttempt;
 import collageify.exceptions.InvalidOptionException;
-import collageify.user.User;
+import collageify.entity.User;
 
 public class MySQLAccess implements IDBAccess {
     private Connection connect = null;
@@ -140,18 +136,6 @@ public class MySQLAccess implements IDBAccess {
     @Override
     public void addUser(User user) throws Exception{
         try{
-            // PreparedStatements can use variables and are more efficient
-            /* preparedStatement = connect
-                    .prepareStatement("INSERT INTO  users('user_id') VALUES('2')");
-            // "myuser, webpage, datum, summary, COMMENTS from feedback.comments");
-            // Parameters start with 1
-            preparedStatement.setString(1, "Test");
-            preparedStatement.setString(2, "TestEmail");
-            preparedStatement.setString(3, "TestWebpage");
-            preparedStatement.setDate(4, new java.sql.Date(2009, 12, 11));
-            preparedStatement.setString(5, "TestSummary");
-            preparedStatement.setString(6, "TestComment");
-            preparedStatement.executeUpdate(); */
             resultSet = connect.createStatement().executeQuery("SELECT MAX(play_id) FROM played;");
             if (resultSet.next()){
                 SQLTime dateTime = new SQLTime();
@@ -176,16 +160,19 @@ public class MySQLAccess implements IDBAccess {
     }
 
     @Override
-    public void getAccount(LoginAttempt loginAttempt) throws Exception {
+    public boolean getAccount(LoginAttempt loginAttempt) throws Exception {
         String email = loginAttempt.getEmail();
         String password = loginAttempt.getPw();
         try{
-            resultSet = connect.createStatement().executeQuery("SELECT COUNT(*) FROM users WHERE email = '"+ email + "';");
+            resultSet = connect.createStatement()
+                    .executeQuery("SELECT EXISTS (SELECT *FROM users WHERE email = '" + email + "' AND password = '" + password +");");
             if(resultSet.next()){
+                boolean returnval = resultSet.getInt(1) == 1 ? true : false;
                 System.out.println("yes");
-
+                return returnval;
             }else{
                 System.out.println("no");
+                return false;
 
             }
         }catch(Exception e) {
