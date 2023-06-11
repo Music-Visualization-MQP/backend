@@ -1,4 +1,4 @@
-package collageify.api;
+package collageify.deprecated.api;
 
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerResponseContext;

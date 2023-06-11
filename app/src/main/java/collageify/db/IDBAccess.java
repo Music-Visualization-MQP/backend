@@ -1,5 +1,5 @@
 package collageify.db;
-import collageify.auth.LoginAttempt;
+import collageify.deprecated.auth.LoginAttempt;
 import collageify.entity.User;
 public interface IDBAccess {
     public void estConnection() throws Exception;

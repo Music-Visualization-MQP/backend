@@ -1,4 +1,4 @@
-package collageify.auth;
+package collageify.deprecated.auth;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;

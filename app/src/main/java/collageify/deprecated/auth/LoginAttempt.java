@@ -1,4 +1,4 @@
-package collageify.auth;
+package collageify.deprecated.auth;
 
 import collageify.db.MySQLAccess;
 

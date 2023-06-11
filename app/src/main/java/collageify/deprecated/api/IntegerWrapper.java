@@ -1,4 +1,4 @@
-package collageify.api;
+package collageify.deprecated.api;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

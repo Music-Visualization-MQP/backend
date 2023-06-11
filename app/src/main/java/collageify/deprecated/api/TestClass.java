@@ -1,19 +1,10 @@
-package collageify.api;
+package collageify.deprecated.api;
 
 
-import java.io.IOException;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.*;
-import jakarta.ws.rs.container.ContainerRequestContext;
-import jakarta.ws.rs.container.ContainerResponseContext;
-import jakarta.ws.rs.container.ContainerResponseFilter;
-import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.ext.Provider;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import collageify.auth.LoginAttempt;
+import collageify.deprecated.auth.LoginAttempt;
 
 @Path("/api")
 public class TestClass {

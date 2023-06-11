@@ -1,4 +1,5 @@
-package collageify.user;
+/*
+package collageify.depricated.user;
 
 
 import collageify.db.MySQLAccess;
@@ -72,3 +73,4 @@ public class User implements iUser{
 
     }
 }
+*/

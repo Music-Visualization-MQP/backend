@@ -36,7 +36,6 @@ dependencies {
     implementation 'org.apache.cxf:cxf-rt-frontend-jaxrs:4.0.1'
     implementation 'org.apache.cxf:cxf-rt-transports-http:4.0.1'
     implementation 'org.apache.cxf:cxf-rt-transports-http-jetty:4.0.1'
-    implementation 'mysql:mysql-connector-java:8.0.33'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
     implementation 'se.michaelthelin.spotify:spotify-web-api-java:8.0.0'
 
@@ -45,6 +44,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     compileOnly 'org.projectlombok:lombok'
+    implementation 'mysql:mysql-connector-java:8.0.33'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

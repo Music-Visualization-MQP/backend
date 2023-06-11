@@ -1,4 +1,4 @@
-package collageify.user;
+package collageify.deprecated.user;
 
 import collageify.exceptions.InvalidOptionException;
 

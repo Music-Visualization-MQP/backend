@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Optional;
 
-import collageify.auth.LoginAttempt;
+import collageify.deprecated.auth.LoginAttempt;
 import collageify.exceptions.InvalidOptionException;
 import collageify.entity.User;
 
