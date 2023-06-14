@@ -1,4 +1,4 @@
-package collageify.service;
+package collageify.service.collageify;
 public interface IAPICalls {
 
     public String getAlbumArt();

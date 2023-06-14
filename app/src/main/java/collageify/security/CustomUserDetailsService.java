@@ -3,6 +3,7 @@ package collageify.security;
 import collageify.entity.User;
 import collageify.repository.UserRepository;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,7 +22,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public CustomUserDetailsService() {
     }
     private UserRepository users;
-
+    @Autowired
     public CustomUserDetailsService(UserRepository users){
         this.users = users;
     }
