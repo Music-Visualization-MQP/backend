@@ -1,4 +1,4 @@
-package collageify.musicService;
+package collageify.service;
 import collageify.db.MySQLAccess;
 
 public class Playing {
