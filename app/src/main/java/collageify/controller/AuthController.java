@@ -6,7 +6,10 @@ import collageify.payload.LoginDto;
 import collageify.repository.UserRepository;
 import collageify.repository.RoleRepository;
 
+import collageify.security.CustomUserDetailsService;
+import jakarta.servlet.http.PushBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,10 +17,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 
@@ -30,13 +30,27 @@ public class AuthController {
     @Autowired
     private UserRepository usrRepo;
 
+
     @Autowired
     private RoleRepository roleRepo;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @PostMapping("/signin")
+    @GetMapping("/pee")
+    public ResponseEntity<String> pee(){
+        return new ResponseEntity<>("hey there this works", HttpStatus.OK);
+    }
+
+    /**
+     *
+     * @param loginDto login dto is a simple class that holds a username/email and the password of a user aattemting...
+     *                 to authenticate
+     * @return should return http response stating that the user has been found and that they are now authenticated
+     *
+     * The problem that i see is that the
+     */
+    @PostMapping({"/signin", "/login"})
     public ResponseEntity<String> authenticateUser(@RequestBody LoginDto loginDto){
         Authentication auth = authMgr.authenticate(new UsernamePasswordAuthenticationToken(
                 loginDto.getUsernameOrEmail(), loginDto.getPassword()));
@@ -53,7 +67,6 @@ public class AuthController {
             return new ResponseEntity<>("email is taken try sumn else bozo", HttpStatus.BAD_REQUEST);
         }
         User user = new User();
-        user.setName(registerDto.getName());
         user.setUsername(registerDto.getUsername());
         user.setEmail(registerDto.getEmail());
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));

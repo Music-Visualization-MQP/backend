@@ -8,6 +8,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,10 +18,13 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-@PropertySource("classpath:application.properties")
-@EnableMethodSecurity
 public class SecurityConfig {
     private UserDetailsService uds;
+
+    /**
+     *
+     * @param uds
+     */
 
     public SecurityConfig(UserDetailsService uds){
         this.uds = uds;
@@ -30,6 +34,13 @@ public class SecurityConfig {
     look here if slamming head into desk about errors....
     hehe you will....
     you will...
+     */
+
+    /**
+     * TODO: Figure out what scheme like is it sha or something
+     * calling the encode() method returns a hash and .matches takes 2 arguments...
+     *
+     * @return this returns the hash for a pasword using the BCryptPasswordEncoder
      */
     @Bean
     public static PasswordEncoder passwordEncoder(){
@@ -42,12 +53,20 @@ public class SecurityConfig {
         return configuration.getAuthenticationManager();
     }
 
+    /**
+     *
+     * @param http
+     * @return
+     * @throws Exception
+     */
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
-        http.authorizeHttpRequests((authorize) -> authorize
+        http.csrf(AbstractHttpConfigurer::disable);
+        http.authorizeHttpRequests((auth) -> auth.anyRequest().permitAll());
+        /*http.authorizeHttpRequests((authorize) -> authorize
                 .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
-                .anyRequest().authenticated());
+                .anyRequest().authenticated());*/
         return http.build();
     }
 

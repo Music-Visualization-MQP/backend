@@ -1,20 +1,13 @@
 package collageify;
 
-import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
-import org.apache.cxf.jaxrs.lifecycle.SingletonResourceProvider;
-
-import collageify.deprecated.api.TestClass;
 import collageify.db.SQLTime;
-import collageify.musicService.Playing;
-import collageify.deprecated.api.CorsFilter;
-import collageify.musicService.SpClientCredentials;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 
-@SpringBootApplication(exclude={DataSourceAutoConfiguration.class})
+@SpringBootApplication(scanBasePackages = "collageify")
 public class App {
     public static void main(String[] args) throws Exception {
         /*SQLTime time = new SQLTime();
@@ -25,7 +18,8 @@ public class App {
         song.UpdateProgress(165000);
         song.UpdateDB();
         SpClientCredentials.clientCredentials_Sync("1DXD0wVXXHwUYo9AXbcMMI");*/
-
+        BCryptPasswordEncoder pwencode = new BCryptPasswordEncoder();
+        System.out.println(pwencode.encode("peeeee"));
         SpringApplication.run(App.class,args);
         /* User user = new User("ldoggs","lawhitley@gmail.com", "somethingEmbarassing", "Laurel", "Whitley");
         user.UpdateDB();

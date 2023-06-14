@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Optional;
 
-import collageify.deprecated.auth.LoginAttempt;
 import collageify.exceptions.InvalidOptionException;
 import collageify.entity.User;
 
@@ -102,8 +101,8 @@ public class MySQLAccess implements IDBAccess {
                 int playID = getNextID(0).orElseThrow(() -> new IllegalStateException("Value is not present"));
                 preparedStatement.setInt(1, (int) playID);
                 preparedStatement.setInt(2, (int) userID);
-                preparedStatement.setString(3, dateTime.getDate());
-                preparedStatement.setString(4, dateTime.getTime());
+                preparedStatement.setDate(3, dateTime.getDate());
+                preparedStatement.setTime(4, dateTime.getTime());
                 preparedStatement.setString(5, spURI);
                 preparedStatement.setString(6, artistName);
                 preparedStatement.setString(7, albumName);
@@ -131,58 +130,6 @@ public class MySQLAccess implements IDBAccess {
     public void getTrackPlayedPublic() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getTrackPlayedPublic'");
-    }
-
-    @Override
-    public void addUser(User user) throws Exception{
-        try{
-            resultSet = connect.createStatement().executeQuery("SELECT MAX(play_id) FROM played;");
-            if (resultSet.next()){
-                SQLTime dateTime = new SQLTime();
-
-                preparedStatement = connect.prepareStatement("INSERT INTO users (user_id, username, email, password, spotify_username, creation_date) VALUES (?,?,?,?,?,?)");
-                int userID = getNextID(1).orElseThrow(() -> new IllegalStateException("Value is not present"));
-                preparedStatement.setInt(1, (int) userID);
-                preparedStatement.setString(2, user.getUsername());
-                preparedStatement.setString(3, user.getEmail());
-                preparedStatement.setString(4, user.getPassword());
-                preparedStatement.setString(5, null);
-                preparedStatement.setString(6, dateTime.getDate());                
-                preparedStatement.executeUpdate();
-            }
-            //preparedStatement = connect.prepareStatement("INSERT INTO played (play_id, user_id)")
-        }catch (Exception e){
-            throw e;
-        } finally {
-            close();
-        }
-        
-    }
-
-    @Override
-    public boolean getAccount(LoginAttempt loginAttempt) throws Exception {
-        String email = loginAttempt.getEmail();
-        String password = loginAttempt.getPw();
-        try{
-            resultSet = connect.createStatement()
-                    .executeQuery("SELECT EXISTS (SELECT *FROM users WHERE email = '" + email + "' AND password = '" + password +");");
-            if(resultSet.next()){
-                boolean returnval = resultSet.getInt(1) == 1 ? true : false;
-                System.out.println("yes");
-                return returnval;
-            }else{
-                System.out.println("no");
-                return false;
-
-            }
-        }catch(Exception e) {
-            throw e;
-        } finally {
-            close();
-        }
-
-
-
     }
 
 }
