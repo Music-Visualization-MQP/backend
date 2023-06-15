@@ -1,10 +1,12 @@
 package collageify.config;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.config.annotation.authentication.configurers.provisioning.JdbcUserDetailsManagerConfigurer;
 
 @Configuration
 public class SecurityConfig {
@@ -37,8 +40,9 @@ public class SecurityConfig {
      */
 
     /**
-     * TODO: Figure out what scheme like is it sha or something
+     *
      * calling the encode() method returns a hash and .matches takes 2 arguments...
+     * uses BCrypt encription standard there is away to increase ith
      *
      * @return this returns the hash for a pasword using the BCryptPasswordEncoder
      */
@@ -47,6 +51,16 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    /*@Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception{
+        auth.jdbcAuthentication()
+                .dataSource(datasource)
+                .usersByUsernameQuery("SELECT username, password, enabled FROM users WHERE username=?")
+                .authoritiesByUsernameQuery("SELECT username, authority FROM authorities WHERE username=?")
+                .passwordEncoder(passwordEncoder())
+                .getUserDetailsService();
+
+    }*/
     @Bean
     public AuthenticationManager authenticationManager(
             AuthenticationConfiguration configuration) throws Exception{

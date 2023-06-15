@@ -16,6 +16,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,7 +36,7 @@ public class AuthController {
     private RoleRepository roleRepo;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @GetMapping("/pee")
     public ResponseEntity<String> pee(){
@@ -52,10 +53,12 @@ public class AuthController {
      */
     @PostMapping({"/signin", "/login"})
     public ResponseEntity<String> authenticateUser(@RequestBody LoginDto loginDto){
-        Authentication auth = authMgr.authenticate(new UsernamePasswordAuthenticationToken(
-                loginDto.getUsernameOrEmail(), loginDto.getPassword()));
+        //remove this
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
+                loginDto.getUsernameOrEmail(), loginDto.getPassword());
+        Authentication auth = authMgr.authenticate(token);
         SecurityContextHolder.getContext().setAuthentication(auth);
-        return new ResponseEntity<>("user signed in ur welcme.", HttpStatus.OK);
+        return new ResponseEntity<>("user signed in ur welcme." + token , HttpStatus.OK);
     }
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody RegisterDto registerDto){
@@ -78,4 +81,5 @@ public class AuthController {
         return new ResponseEntity<>("urinethere", HttpStatus.OK);
 
     }
+
 }

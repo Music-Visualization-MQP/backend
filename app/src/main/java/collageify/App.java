@@ -1,7 +1,10 @@
 package collageify;
 
+import collageify.controller.AuthController;
 import collageify.db.SQLTime;
 
+import collageify.payload.LoginDto;
+import com.mysql.cj.log.Log;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -19,7 +22,11 @@ public class App {
         song.UpdateDB();
         SpClientCredentials.clientCredentials_Sync("1DXD0wVXXHwUYo9AXbcMMI");*/
         BCryptPasswordEncoder pwencode = new BCryptPasswordEncoder();
-        System.out.println(pwencode.encode("peeeee"));
+        /*LoginDto dto = new LoginDto();
+        dto.setPassword("f");
+        dto.setUsernameOrEmail("ffsffff");
+        System.out.println(new AuthController().authenticateUser(dto));*/
+        System.out.println(pwencode.encode("euphoria"));
         SpringApplication.run(App.class,args);
         /* User user = new User("ldoggs","lawhitley@gmail.com", "somethingEmbarassing", "Laurel", "Whitley");
         user.UpdateDB();
