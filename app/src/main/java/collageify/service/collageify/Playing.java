@@ -41,16 +41,12 @@ public class Playing {
 
     public void UpdateProgress(Integer newProgressMS){
         this.progressMS = newProgressMS;
-        this.progressPercent = (double) (progressMS / durationMS); 
-        if(this.progressPercent >= 0.66d){
-            this.enoughPlayed = true;
-        } else{
-            this.enoughPlayed = false;
-        }
+        this.progressPercent = (double) (progressMS / durationMS);
+        this.enoughPlayed = this.progressPercent >= 0.66d;
     }
 
     public void UpdateDB() throws Exception{
-        if(enoughPlayed == true){
+        if(enoughPlayed){
             MySQLAccess  sql = new MySQLAccess();
             try{
                 sql.estConnection();
