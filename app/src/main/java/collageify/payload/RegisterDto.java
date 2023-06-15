@@ -1,6 +1,5 @@
 package collageify.payload;
 import lombok.Data;
-import collageify.db.SQLTime;
 
 @Data
 public class RegisterDto {

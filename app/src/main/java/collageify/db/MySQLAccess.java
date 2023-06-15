@@ -7,12 +7,11 @@ import java.sql.Statement;
 import java.util.Optional;
 
 import collageify.exceptions.InvalidOptionException;
-import collageify.entity.User;
 
 public class MySQLAccess implements IDBAccess {
+    private PreparedStatement preparedStatement = null;
     private Connection connect = null;
     private Statement statement = null;
-    private PreparedStatement preparedStatement = null;
     private ResultSet resultSet = null;
 
     private Optional<Integer> getNextID(int option) throws Exception {  

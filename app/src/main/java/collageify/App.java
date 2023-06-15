@@ -1,10 +1,5 @@
 package collageify;
 
-import collageify.controller.AuthController;
-import collageify.db.SQLTime;
-
-import collageify.payload.LoginDto;
-import com.mysql.cj.log.Log;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

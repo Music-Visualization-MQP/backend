@@ -1,5 +1,4 @@
 package collageify.entity;
-import lombok.Generated;
 import lombok.Getter;
 import lombok.Setter;
 import jakarta.persistence.*;
