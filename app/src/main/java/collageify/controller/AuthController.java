@@ -10,6 +10,7 @@ import collageify.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,6 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeUriRequest;
 
 import java.util.Collections;
 
@@ -36,7 +38,8 @@ public class AuthController {
     @Autowired
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    @GetMapping("/pee")
+    //@RequestMapping("/callback")
+    //@GetMapping("/callback")
     public ResponseEntity<String> pee(){
         return new ResponseEntity<>("hey there this works", HttpStatus.OK);
     }
@@ -65,7 +68,7 @@ public class AuthController {
 
         }
         if(usrRepo.existsByEmail(registerDto.getEmail())){
-            return new ResponseEntity<>("email is taken try sumn else bozo", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("email is taken try something else", HttpStatus.BAD_REQUEST);
         }
         User user = new User();
         user.setUsername(registerDto.getUsername());
@@ -76,8 +79,7 @@ public class AuthController {
         user.setRoles(Collections.singleton(roles));
         usrRepo.save(user);
 
-        return new ResponseEntity<>("urinethere", HttpStatus.OK);
-
+        return new ResponseEntity<>("Registered! if youre not redirected soon... you should re-evaluate", HttpStatus.OK);
     }
 
 }

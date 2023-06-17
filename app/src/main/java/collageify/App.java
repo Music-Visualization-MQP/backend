@@ -20,12 +20,11 @@ public class App {
         /*LoginDto dto = new LoginDto();
         dto.setPassword("f");
         dto.setUsernameOrEmail("ffsffff");
-        System.out.println(new AuthController().authenticateUser(dto));*/
+        System.out.println(new AuthController().authenticateUser(dto));
         System.out.println(pwencode.encode("euphoria"));
-        SpringApplication.run(App.class,args);
-        /* User user = new User("ldoggs","lawhitley@gmail.com", "somethingEmbarassing", "Laurel", "Whitley");
         user.UpdateDB();
          */
+        SpringApplication.run(App.class,args);
         /*JAXRSServerFactoryBean factoryBean = new JAXRSServerFactoryBean();
         factoryBean.setResourceClasses(TestClass.class);
 
