@@ -53,6 +53,13 @@ public class CallbackController {
             spotifyApi.setAccessToken(authorizationCodeCredentials.getAccessToken());
             spotifyApi.setRefreshToken(authorizationCodeCredentials.getRefreshToken());
             System.out.println("expires in:" + authorizationCodeCredentials.getExpiresIn());
+            /**
+             * the code below this is realy bad
+             * and  needs to be (refactored?) whatever
+             * just make this a private class that takes the arguments
+             * and gives them to the playing side of the server
+             *
+             */
             SQLAccess sql = new SQLAccess();
             sql.estConnection();
             sql.addSpotifyCredentials(8,spotifyApi.getAccessToken(),spotifyApi.getRefreshToken(), LocalDateTime.now().plusSeconds(authorizationCodeCredentials.getExpiresIn()));

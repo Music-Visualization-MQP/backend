@@ -11,10 +11,12 @@ import java.io.IOException;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
+
+import collageify.db.SQLAccess;
 public class SpClientCredentials {
     private static final String clientId = System.getenv("SP_CID");
     private static final String clientSecret = System.getenv("SP_S");
-    private static final SpotifyApi spotifyApi = new SpotifyApi.Builder()
+    private SpotifyApi spotifyApi = new SpotifyApi.Builder()
             .setClientId(clientId)
             .setClientSecret(clientSecret)
             .build();
@@ -23,7 +25,7 @@ public class SpClientCredentials {
     public static void clientCredentials_Sync(String id) {
         try {
             final ClientCredentials clientCredentials = clientCredentialsRequest.execute();
-            spotifyApi.setAccessToken(clientCredentials.getAccessToken());
+            //spotifyApi.setAccessToken();
             final GetTrackRequest getTrackRequest = spotifyApi.getTrack(id).build();
             final Track track = getTrackRequest.execute();
 
@@ -35,6 +37,7 @@ public class SpClientCredentials {
         }
     }
 
+    private void setC
     public static void clientCredentials_Async() {
         try {
             final CompletableFuture<ClientCredentials> clientCredentialsFuture = clientCredentialsRequest.executeAsync();

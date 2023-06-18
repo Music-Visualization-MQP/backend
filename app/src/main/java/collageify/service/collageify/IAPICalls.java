@@ -5,4 +5,6 @@ public interface IAPICalls {
     public Integer getCurrentPopularity();
     public void UpdateDB() throws Exception;
 
+
+
 }
