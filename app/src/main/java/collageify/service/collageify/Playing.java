@@ -1,6 +1,12 @@
 package collageify.service.collageify;
-import collageify.db.MySQLAccess;
+import collageify.db.SQLAccess;
+import jdk.jfr.Timestamp;
+import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
+
+@Component
 public class Playing {
     private Integer userID;
     private String username;
@@ -14,10 +20,17 @@ public class Playing {
     private String trackName;
     private Integer popularity;
     private Integer durationMS;
-    
+
+    private String refreshToken;
+    private LocalDateTime refreshTokenExpires;
+    private String accessToken;
+    private LocalDateTime accessTokenExpires;
+
     private Boolean enoughPlayed;
 
-    public Playing(){
+
+    public Playing(Integer userID, String accessToken, String refreshToken, LocalDateTime accessTokenExpires, LocalDateTime refreshTokenExpires){
+
         
     }
 
@@ -47,7 +60,7 @@ public class Playing {
 
     public void UpdateDB() throws Exception{
         if(enoughPlayed){
-            MySQLAccess  sql = new MySQLAccess();
+            SQLAccess sql = new SQLAccess();
             try{
                 sql.estConnection();
                 sql.addPlayed(userID, username, spURI, artistName, albumName, trackName, popularity, durationMS);

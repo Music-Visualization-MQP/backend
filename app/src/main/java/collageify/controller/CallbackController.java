@@ -1,15 +1,18 @@
 package collageify.controller;
 
 import collageify.repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.SpotifyHttpManager;
+import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
+import se.michaelthelin.spotify.model_objects.credentials.AuthorizationCodeCredentials;
+import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeRequest;
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeUriRequest;
 
+import java.io.IOException;
 import java.net.URI;
 
 @RestController
@@ -19,7 +22,7 @@ public class CallbackController {
     private String code = "";
     private static final SpotifyApi spotifyApi = new SpotifyApi.Builder()
             .setClientId(System.getenv("SP_CID"))
-            .setClientSecret("SP_S")
+            .setClientSecret(System.getenv("SP_S"))
             .setRedirectUri(redirectUri)
             .build();
     @Autowired
@@ -36,6 +39,28 @@ public class CallbackController {
         return uri.toString();
 
     }
+    @GetMapping("/get-refresh-token/")
+    public String getSpotifyRefreshToken(@RequestParam("code") String usercode, HttpServletResponse response) throws IOException{
+        code = usercode;
+        AuthorizationCodeRequest authorizationCodeRequest = spotifyApi.authorizationCode(code).build();
+
+        try{
+            final AuthorizationCodeCredentials authorizationCodeCredentials = authorizationCodeRequest.execute();
+
+            spotifyApi.setAccessToken(authorizationCodeCredentials.getAccessToken());
+            spotifyApi.setRefreshToken(authorizationCodeCredentials.getRefreshToken());
+            System.out.println("expires in:" + authorizationCodeCredentials.getExpiresIn());
+
+        } catch (IOException | SpotifyWebApiException | org.apache.hc.core5.http.ParseException e){
+            System.out.println("error:" + e.getMessage());
+        }
+        response.sendRedirect("http://localhost:4200/");
+        String token = spotifyApi.getRefreshToken();
+        System.out.println(token);
+        return spotifyApi.getAccessToken();
+    }
+
+
 
 
 

@@ -1,14 +1,11 @@
 package collageify.db;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import collageify.exceptions.InvalidOptionException;
 
-public class MySQLAccess implements IDBAccess {
+public class SQLAccess implements IDBAccess {
     private PreparedStatement preparedStatement = null;
     private Connection connect = null;
     private Statement statement = null;
@@ -118,6 +115,29 @@ public class MySQLAccess implements IDBAccess {
             close();
         }
     }
+
+    @Override
+    public void addSpotifyCredentials(Integer userID, String accessToken, String refreshToken, LocalDateTime accessTokenExp) throws Exception {
+        resultSet = connect.createStatement().executeQuery("INSERT INTO spotify_credentials (refresh_token, access_token, user_id, access_token_exp_date, access_token_exp_time) VALUES (?,?,?,?,?)");
+        Timestamp timestamp = Timestamp.valueOf(accessTokenExp);
+        Date date = new Date(timestamp.getTime());
+        Time time = Time.valueOf(accessTokenExp.toLocalTime());
+        try{
+            if(resultSet.next()){
+                preparedStatement.setString(1, refreshToken);
+                preparedStatement.setString(2, accessToken);
+                preparedStatement.setInt(3, (int) userID);
+                preparedStatement.setDate(4, date);
+                preparedStatement.setTime(5,time);
+
+            }
+
+        } catch(Exception e) {
+            throw e;
+        }
+
+    }
+
 
     @Override
     public void getTrackPlayedUser() {
