@@ -62,7 +62,7 @@ public class SQLAccess implements IDBAccess {
     }
 
     @Override
-    public void estConnection() throws Exception {
+    public void estConnection() throws SQLException {
         try {
             // This will load the MySQL driver, each DB has its own driver
             // Setup the connection with the DB
@@ -117,23 +117,24 @@ public class SQLAccess implements IDBAccess {
     }
 
     @Override
-    public void addSpotifyCredentials(Integer userID, String accessToken, String refreshToken, LocalDateTime accessTokenExp) throws Exception {
-        resultSet = connect.createStatement().executeQuery("INSERT INTO spotify_credentials (refresh_token, access_token, user_id, access_token_exp_date, access_token_exp_time) VALUES (?,?,?,?,?)");
+    public void addSpotifyCredentials(Integer userID, String accessToken, String refreshToken, LocalDateTime accessTokenExp) throws SQLException {
         Timestamp timestamp = Timestamp.valueOf(accessTokenExp);
         Date date = new Date(timestamp.getTime());
         Time time = Time.valueOf(accessTokenExp.toLocalTime());
+        System.out.println("125 in sql access");
         try{
-            if(resultSet.next()){
-                preparedStatement.setString(1, refreshToken);
-                preparedStatement.setString(2, accessToken);
-                preparedStatement.setInt(3, (int) userID);
-                preparedStatement.setDate(4, date);
-                preparedStatement.setTime(5,time);
-
-            }
+            preparedStatement = connect.prepareStatement("INSERT INTO spotify_credentials (refresh_token, access_token, user_id, access_token_exp_date, access_token_exp_time) VALUES (?,?,?,?,?)");
+            preparedStatement.setString(1, refreshToken);
+            preparedStatement.setString(2, accessToken);
+            preparedStatement.setInt(3, (int) userID);
+            preparedStatement.setDate(4, date);
+            preparedStatement.setTime(5,time);
+            preparedStatement.executeUpdate();
 
         } catch(Exception e) {
             throw e;
+        } finally {
+            close();
         }
 
     }

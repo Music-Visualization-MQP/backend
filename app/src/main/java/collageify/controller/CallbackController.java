@@ -1,5 +1,6 @@
 package collageify.controller;
 
+import collageify.db.SQLAccess;
 import collageify.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,6 +15,8 @@ import se.michaelthelin.spotify.requests.authorization.authorization_code.Author
 
 import java.io.IOException;
 import java.net.URI;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/callback")
@@ -50,10 +53,14 @@ public class CallbackController {
             spotifyApi.setAccessToken(authorizationCodeCredentials.getAccessToken());
             spotifyApi.setRefreshToken(authorizationCodeCredentials.getRefreshToken());
             System.out.println("expires in:" + authorizationCodeCredentials.getExpiresIn());
-
-        } catch (IOException | SpotifyWebApiException | org.apache.hc.core5.http.ParseException e){
+            SQLAccess sql = new SQLAccess();
+            sql.estConnection();
+            sql.addSpotifyCredentials(8,spotifyApi.getAccessToken(),spotifyApi.getRefreshToken(), LocalDateTime.now().plusSeconds(authorizationCodeCredentials.getExpiresIn()));
+        } catch (IOException | SpotifyWebApiException | org.apache.hc.core5.http.ParseException | SQLException e){
             System.out.println("error:" + e.getMessage());
         }
+
+
         response.sendRedirect("http://localhost:4200/");
         String token = spotifyApi.getRefreshToken();
         System.out.println(token);

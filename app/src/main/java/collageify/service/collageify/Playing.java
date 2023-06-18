@@ -28,7 +28,9 @@ public class Playing {
 
     private Boolean enoughPlayed;
 
+    public Playing(){
 
+    }
     public Playing(Integer userID, String accessToken, String refreshToken, LocalDateTime accessTokenExpires, LocalDateTime refreshTokenExpires){
 
         
