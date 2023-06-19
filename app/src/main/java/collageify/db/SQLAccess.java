@@ -152,4 +152,21 @@ public class SQLAccess implements IDBAccess {
         throw new UnsupportedOperationException("Unimplemented method 'getTrackPlayedPublic'");
     }
 
+    @Override
+    public void getAuthCredentials(Integer userID) throws SQLException {
+        try{
+            preparedStatement = connect.prepareStatement("SELECT * FROM spotify_credentials WHERE user_id = ?");
+            preparedStatement.setInt(1,(int) userID);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            System.out.println(resultSet);
+
+
+        } catch(Exception e) {
+            throw e;
+        } finally {
+            close();
+        }
+
+    }
+
 }

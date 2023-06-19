@@ -9,4 +9,5 @@ public interface IDBAccess {
     public void addSpotifyCredentials(Integer userID, String accessToken, String refreshToken, LocalDateTime accessTokenExp) throws SQLException;
     public void getTrackPlayedUser();
     public void getTrackPlayedPublic();
+    public void getAuthCredentials(Integer userID) throws SQLException;
 }
