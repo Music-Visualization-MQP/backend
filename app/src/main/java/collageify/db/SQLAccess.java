@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import collageify.exceptions.InvalidOptionException;
+import collageify.exceptions.NoSPApiException;
+import collageify.service.collageify.Credentials;
 
 public class SQLAccess implements IDBAccess {
     private PreparedStatement preparedStatement = null;
@@ -153,12 +155,21 @@ public class SQLAccess implements IDBAccess {
     }
 
     @Override
-    public void getAuthCredentials(Integer userID) throws SQLException {
+    public Optional<Credentials> getAuthCredentials(Integer userID) throws SQLException, NoSPApiException {
         try{
             preparedStatement = connect.prepareStatement("SELECT * FROM spotify_credentials WHERE user_id = ?");
             preparedStatement.setInt(1,(int) userID);
             ResultSet resultSet = preparedStatement.executeQuery();
-            System.out.println(resultSet);
+            if(resultSet.next()){
+                return  Optional.of(new Credentials((Integer) resultSet.getInt("id"),
+                        resultSet.getString("refresh_token"),
+                        resultSet.getString("access_token"),
+                        (Integer) resultSet.getInt("user_id"),
+                        resultSet.getDate("access_token_exp_date"),
+                        resultSet.getTime("access_token_exp_time")));
+            } else {
+                throw new NoSPApiException("");
+            }
 
 
         } catch(Exception e) {
@@ -166,7 +177,6 @@ public class SQLAccess implements IDBAccess {
         } finally {
             close();
         }
-
     }
 
 }

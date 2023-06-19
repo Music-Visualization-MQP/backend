@@ -17,12 +17,23 @@ import java.util.concurrent.CompletionException;
 
 public class SPAccess {
 
-    private final Integer userID;
+    //private final Integer id;
     private final Optional<SpotifyApi> spotifyApi;
 
-    SPAccess(Integer UserID) throws NoSPApiException {
 
-        this.spotifyApi = spotifyApi(accessToken, refreshToken);
+    SPAccess(Integer userId) throws NoSPApiException, SQLException{
+        SQLAccess sql = new SQLAccess();
+        sql.estConnection();
+        Optional<Credentials> credentials = sql.getAuthCredentials(userId);
+        if(credentials.isPresent()){
+
+            this.spotifyApi = spotifyApi(Optional.of(credentials.get().accessToken), Optional.of(credentials.get().refreshToken));
+        } else {
+            throw new NoSPApiException("asdlfsdf");
+        }
+
+
+        //this.spotifyApi = spotifyApi(accessToken, refreshToken);
     }
     private static final String clientId = System.getenv("SP_CID");
     private static final String clientSecret = System.getenv("SP_S");
@@ -45,14 +56,7 @@ public class SPAccess {
             return this.spotifyApi.get();
         } else throw new NoSPApiException("invalid spotify api");
     }
-    private void getToken(Integer userID) throws SQLException {
-        SQLAccess sql = new SQLAccess();
-        /*try{
-        } catch (SQLException e) {
-            throw e;
-        }*/
 
-    }
 
 
     /*private SpotifyApi spotifyApi = new SpotifyApi.Builder()

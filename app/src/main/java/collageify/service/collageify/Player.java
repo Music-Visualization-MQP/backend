@@ -1,7 +1,10 @@
 package collageify.service.collageify;
 import collageify.db.SQLAccess;
+import collageify.exceptions.NoSPApiException;
 
-public class Playing {
+import java.sql.SQLException;
+
+public class Player {
 
     private Integer userID;
     private String username;
@@ -19,13 +22,13 @@ public class Playing {
     private Boolean enoughPlayed;
 
 
-    private SPAccess = new SPAccess();
+    private SPAccess spAccess;
 
-    public Playing(){
-
+    public Player(Integer userID) throws NoSPApiException, SQLException {
+        this.spAccess = new SPAccess(userID);
     }
 
-    public Playing(Integer userID, String username, Integer progressMS, String spURI, String artistName, String albumName, String trackName, Integer popularity, Integer durationMS){
+    public Player(Integer userID, String username, Integer progressMS, String spURI, String artistName, String albumName, String trackName, Integer popularity, Integer durationMS) throws NoSPApiException {
         this.userID = userID;
         this.username = username;
         this.progressMS = progressMS;
