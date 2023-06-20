@@ -27,7 +27,6 @@ public class AuthorizationCodeUriExample {
     private static final AuthorizationCodeUriRequest authorizationCodeUriRequest = spotifyApi.authorizationCodeUri()
 //          .state("x4xkmn9pu3j6ukrs8n")
 //          .scope("user-read-birthdate,user-read-email")
-//          .show_dialog(true)
             .build();
 
     public static void authorizationCodeUri_Sync() {

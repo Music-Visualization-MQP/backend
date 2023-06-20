@@ -20,7 +20,8 @@ public class App {
         song.UpdateDB();
         SPAccess.clientCredentials_Sync("1DXD0wVXXHwUYo9AXbcMMI");*/
         Player play = new Player(8);
-
+        play.run();
+        //System.out.print(play.spAccess.requestData());
         BCryptPasswordEncoder pwencode = new BCryptPasswordEncoder();
         /*LoginDto dto = new LoginDto();
         dto.setPassword("f");

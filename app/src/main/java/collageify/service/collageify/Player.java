@@ -1,8 +1,10 @@
 package collageify.service.collageify;
 import collageify.db.SQLAccess;
 import collageify.exceptions.NoSPApiException;
+import com.mysql.cj.PreparedQuery;
 
 import java.sql.SQLException;
+import java.util.Optional;
 
 public class Player {
 
@@ -22,7 +24,7 @@ public class Player {
     private Boolean enoughPlayed;
 
 
-    private SPAccess spAccess;
+    public SPAccess spAccess;
 
     public Player(Integer userID) throws NoSPApiException, SQLException {
         this.spAccess = new SPAccess(userID);
@@ -66,6 +68,20 @@ public class Player {
                 throw e;
             }
         }
+    }
+
+    public void run() throws Exception, NoSPApiException{
+        while (this.spAccess.credentials.get().isTokenValid()){
+
+            System.out.println("waiting");
+            if(Optional.ofNullable(this.spAccess.requestData()).isPresent()){
+                System.out.println(this.spAccess.requestData());
+                wait(2500);
+            } else {
+                System.out.println("i got nothing");
+            }
+        }
+
     }
 
 
