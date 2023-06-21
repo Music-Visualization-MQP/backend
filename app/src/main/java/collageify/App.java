@@ -30,7 +30,7 @@ public class App {
         System.out.println(pwencode.encode("euphoria"));
         user.UpdateDB();
          */
-        SpringApplication.run(App.class,args);
+        //SpringApplication.run(App.class,args);
         play.run();
 
         /*JAXRSServerFactoryBean factoryBean = new JAXRSServerFactoryBean();

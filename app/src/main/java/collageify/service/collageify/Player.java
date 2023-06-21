@@ -6,12 +6,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mysql.cj.PreparedQuery;
 import java.sql.SQLException;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 public class Player {
-
-    private Integer userID;
+    private boolean initialized;
+    private Integer userID = 8;
     private String username;
 
     private Integer progressMS;
@@ -27,6 +31,8 @@ public class Player {
     private Boolean enoughPlayed;
 
     private Boolean playing;
+    private String isrc;
+    private JsonNode json;
 
 
     public SPAccess spAccess;
@@ -53,18 +59,29 @@ public class Player {
         }
     }
 
-    public void initProgress(Optional<JsonNode> node){
+    public void initSong(Optional<JsonNode> node){
         if(node.isPresent()){
+            this.initialized = true;
             this.progressMS = node.get().get("progress_ms").asInt();
             this.durationMS = node.get().get("item").get("duration_ms").asInt();
+            this.isrc = node.get().get("item").get("external_ids").get("isrc").asText();
+            this.username = node.get().get("context").get("uri").asText();
+            this.spURI = node.get().get("item").get("uri").asText();
+            this.artistName = node.get().get("item").get("artists").get(0).get("name").asText();
+            this.albumName = node.get().get("item").get("album").get("name").asText();
+            this.trackName = node.get().get("item").get("name").asText();
+            this.popularity = node.get().get("item").get("popularity").asInt();
+
         }
 
     }
 
     public void UpdateProgress(Integer newProgressMS){
         this.progressMS = newProgressMS;
-        this.progressPercent = (double) (progressMS / durationMS);
+        this.progressPercent = (double) this.progressMS / this.durationMS;
+        System.out.println(this.progressPercent);
         if(this.progressPercent >= 0.66d){
+            System.out.println("enough played");
             this.enoughPlayed = true;
         } else{
             this.enoughPlayed = false;
@@ -72,11 +89,15 @@ public class Player {
     }
 
     public void UpdateDB() throws Exception{
-        if(enoughPlayed == true){
+        System.out.println(this.enoughPlayed);
+        if(this.enoughPlayed){
             SQLAccess  sql = new SQLAccess();
             try{
+                System.out.println("updating db");
                 sql.estConnection();
-                sql.addPlayed(userID, username, spURI, artistName, albumName, trackName, popularity, durationMS);
+                System.out.println("connected");
+                sql.addPlayed(userID, username, spURI, artistName, albumName, trackName, popularity, durationMS, " ");
+                System.out.println("should be in there");
             } catch (Exception e){
                 throw e;
             }
@@ -98,11 +119,29 @@ public class Player {
             if (Optional.ofNullable(this.spAccess.requestData()).isPresent()) {
                 Runnable task = () -> {
                     try {
-                        System.out.println(responseToJson(this.spAccess.requestData()).get());
-                        System.out.println(responseToJson(this.spAccess.requestData()).get().get("item").get("name").asText());
-                        this.initProgress(responseToJson(this.spAccess.requestData()));
-                        System.out.println(this.durationMS);
-                        System.out.println(this.progressMS);
+                        //System.out.println(responseToJson(this.spAccess.requestData()).get());
+                        //System.out.println(responseToJson(this.spAccess.requestData()).get().get("item").get("name").asText());
+                        if(this.durationMS == null){
+                            System.out.println("116");
+                            this.initSong(responseToJson(this.spAccess.requestData()));
+                            this.json = responseToJson(this.spAccess.requestData()).get();
+                        } else {
+                            System.out.println("121");
+                            this.UpdateProgress(responseToJson(this.spAccess.requestData()).get().get("progress_ms").asInt());
+                            System.out.println(this.enoughPlayed);
+                            ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+                            Future<?> future = executorService.submit(() -> {
+                                try {
+                                    this.UpdateDB();
+                                } catch (Exception e) {
+                                    throw new RuntimeException(e);
+                                }
+                            });
+                            future.get();
+                        }
+                        //System.out.println(this.durationMS);
+                        //System.out.println(this.progressMS);
                     } catch (Exception | NoSPApiException e) {
                         // Handle any exceptions thrown during the task execution
                     } catch (JSONNotPresent e) {
@@ -117,7 +156,7 @@ public class Player {
             }
 
             try {
-                Thread.sleep(2500);
+                Thread.sleep(10000);
             } catch (InterruptedException e) {
                 // Handle the InterruptedException if needed
             }

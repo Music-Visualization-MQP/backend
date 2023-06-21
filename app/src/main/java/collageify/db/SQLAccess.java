@@ -77,36 +77,28 @@ public class SQLAccess implements IDBAccess {
     }
 
     @Override
-    public void addPlayed(Integer userID, String username, String spURI, String artistName, String albumName, String trackName, Integer popularity, Integer durationMS) throws Exception {
+    public void addPlayed(Integer userID, String username, String spURI, String artistName, String albumName, String trackName, Integer popularity, Integer durationMS, String json) throws Exception {
         try{
-            // PreparedStatements can use variables and are more efficient
-            /* preparedStatement = connect
-                    .prepareStatement("INSERT INTO  users('user_id') VALUES('2')");
-            // "myuser, webpage, datum, summary, COMMENTS from feedback.comments");
-            // Parameters start with 1
-            preparedStatement.setString(1, "Test");
-            preparedStatement.setString(2, "TestEmail");
-            preparedStatement.setString(3, "TestWebpage");
-            preparedStatement.setDate(4, new java.sql.Date(2009, 12, 11));
-            preparedStatement.setString(5, "TestSummary");
-            preparedStatement.setString(6, "TestComment");
-            preparedStatement.executeUpdate(); */
-            resultSet = connect.createStatement().executeQuery("SELECT MAX(play_id) FROM played;");
-            if (resultSet.next()){
-                SQLTime dateTime = new SQLTime();
-
-                preparedStatement = connect.prepareStatement("INSERT INTO played (user_id, play_date, play_time, spotify_uri, artist_name, album_name, track_name, popularity, duration_ms) VALUES (?,?,?,?,?,?,?,?,?)");
-                preparedStatement.setInt(1, (int) userID);
-                preparedStatement.setDate(2, dateTime.getDate());
-                preparedStatement.setTime(3, dateTime.getTime());
-                preparedStatement.setString(4, spURI);
-                preparedStatement.setString(5, artistName);
-                preparedStatement.setString(6, albumName);
-                preparedStatement.setString(7, trackName);
-                preparedStatement.setInt(8, (int) popularity);
-                preparedStatement.setInt(9, (int) durationMS);
+            SQLTime dateTime = new SQLTime();
+            preparedStatement = connect.prepareStatement("INSERT INTO played (user_id, play_date, play_time, spotify_uri, artist_name, album_name, track_name, popularity, duration_ms, sp_data) VALUES (?,?,?,?,?,?,?,?,?,?)");
+            preparedStatement.setInt(1, (int) userID);
+            preparedStatement.setDate(2, dateTime.getDate());
+            preparedStatement.setTime(3, dateTime.getTime());
+            preparedStatement.setString(4, spURI);
+            preparedStatement.setString(5, artistName);
+            preparedStatement.setString(6, albumName);
+            preparedStatement.setString(7, trackName);
+            preparedStatement.setInt(8, (int) popularity);
+            preparedStatement.setInt(9, (int) durationMS);
+            preparedStatement.setString(10, json);
+            System.out.println("i got to 94!");
+            try{
                 preparedStatement.executeUpdate();
+
+            } catch (Exception e){
+                throw e;
             }
+            System.out.println("should be in there");
             //preparedStatement = connect.prepareStatement("INSERT INTO played (play_id, user_id)")
         }catch (Exception e){
             throw e;
