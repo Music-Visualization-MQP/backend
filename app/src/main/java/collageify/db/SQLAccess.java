@@ -80,7 +80,7 @@ public class SQLAccess implements IDBAccess {
     public void addPlayed(Integer userID, String username, String spURI, String artistName, String albumName, String trackName, Integer popularity, Integer durationMS, String json) throws Exception {
         try{
             SQLTime dateTime = new SQLTime();
-            preparedStatement = connect.prepareStatement("INSERT INTO played (user_id, play_date, play_time, spotify_uri, artist_name, album_name, track_name, popularity, duration_ms, sp_data) VALUES (?,?,?,?,?,?,?,?,?,?)");
+            preparedStatement = connect.prepareStatement("INSERT INTO played (user_id, play_date, play_time, spotify_uri, artist_name, album_name, track_name, popularity, duration_ms) VALUES (?,?,?,?,?,?,?,?,?)");
             preparedStatement.setInt(1, (int) userID);
             preparedStatement.setDate(2, dateTime.getDate());
             preparedStatement.setTime(3, dateTime.getTime());
@@ -90,7 +90,7 @@ public class SQLAccess implements IDBAccess {
             preparedStatement.setString(7, trackName);
             preparedStatement.setInt(8, (int) popularity);
             preparedStatement.setInt(9, (int) durationMS);
-            preparedStatement.setString(10, json);
+            //preparedStatement.setString(10, json);
             System.out.println("i got to 94!");
             try{
                 preparedStatement.executeUpdate();

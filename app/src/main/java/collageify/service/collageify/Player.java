@@ -13,6 +13,8 @@ import java.util.concurrent.Future;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
+
 public class Player {
     private boolean initialized;
     private Integer userID = 8;
@@ -25,6 +27,7 @@ public class Player {
     private String artistName;
     private String albumName;
     private String trackName;
+    private String oldTrackName;
     private Integer popularity;
     private Integer durationMS;
 
@@ -41,7 +44,7 @@ public class Player {
         this.spAccess = new SPAccess(userID);
     }
 
-    public void addInfo(Integer userID, String username, Integer progressMS, String spURI, String artistName, String albumName, String trackName, Integer popularity, Integer durationMS) throws NoSPApiException {
+   /* private void addInfo(Integer userID, String username, Integer progressMS, String spURI, String artistName, String albumName, String trackName, Integer popularity, Integer durationMS) throws NoSPApiException {
         this.userID = userID;
         this.username = username;
         this.progressMS = progressMS;
@@ -57,7 +60,7 @@ public class Player {
         } else{
             this.enoughPlayed = false;
         }
-    }
+        }*/
 
     public void initSong(Optional<JsonNode> node){
         if(node.isPresent()){
@@ -71,12 +74,11 @@ public class Player {
             this.albumName = node.get().get("item").get("album").get("name").asText();
             this.trackName = node.get().get("item").get("name").asText();
             this.popularity = node.get().get("item").get("popularity").asInt();
-
         }
 
     }
 
-    public void UpdateProgress(Integer newProgressMS){
+    private void UpdateProgress(Integer newProgressMS){
         this.progressMS = newProgressMS;
         this.progressPercent = (double) this.progressMS / this.durationMS;
         System.out.println(this.progressPercent);
@@ -88,7 +90,7 @@ public class Player {
         }
     }
 
-    public void UpdateDB() throws Exception{
+    private void UpdateDB() throws Exception{
         System.out.println(this.enoughPlayed);
         if(this.enoughPlayed){
             SQLAccess  sql = new SQLAccess();
@@ -96,7 +98,8 @@ public class Player {
                 System.out.println("updating db");
                 sql.estConnection();
                 System.out.println("connected");
-                sql.addPlayed(userID, username, spURI, artistName, albumName, trackName, popularity, durationMS, " ");
+                sql.addPlayed(8, username, spURI, artistName, albumName, trackName, popularity, durationMS, this.json.asText());
+                //sql.addPlayed(userID, username, spURI, artistName, albumName, trackName, popularity, durationMS, " ");
                 System.out.println("should be in there");
             } catch (Exception e){
                 throw e;
@@ -116,21 +119,24 @@ public class Player {
         while (this.spAccess.credentials.get().isTokenValid()) {
             System.out.println("waiting");
 
+
             if (Optional.ofNullable(this.spAccess.requestData()).isPresent()) {
                 Runnable task = () -> {
+                    Integer wait = 200;
                     try {
                         //System.out.println(responseToJson(this.spAccess.requestData()).get());
                         //System.out.println(responseToJson(this.spAccess.requestData()).get().get("item").get("name").asText());
-                        if(this.durationMS == null){
+                        if(this.initialized == false){
                             System.out.println("116");
                             this.initSong(responseToJson(this.spAccess.requestData()));
                             this.json = responseToJson(this.spAccess.requestData()).get();
+
                         } else {
                             System.out.println("121");
                             this.UpdateProgress(responseToJson(this.spAccess.requestData()).get().get("progress_ms").asInt());
                             System.out.println(this.enoughPlayed);
+                            //unsure if this is needed
                             ExecutorService executorService = Executors.newSingleThreadExecutor();
-
                             Future<?> future = executorService.submit(() -> {
                                 try {
                                     this.UpdateDB();
@@ -139,6 +145,20 @@ public class Player {
                                 }
                             });
                             future.get();
+                            System.out.println(responseToJson(this.spAccess.requestData()).get().get("item").get("name").asText());
+                            System.out.println(this.trackName);
+                            System.out.println("sleeping" + (this.durationMS - this.progressMS));
+                            System.out.println("should be true "+ (this.trackName.equals(responseToJson(this.spAccess.requestData()).get().get("item").get("name").asText())));
+                            if(this.oldTrackName.equals(responseToJson(this.spAccess.requestData()).get().get("item").get("name").asText())){
+                                this.UpdateProgress(responseToJson(this.spAccess.requestData()).get().get("progress_ms").asInt());
+                                System.out.println("sleeping" + (this.durationMS - this.progressMS));
+                                Thread.sleep((this.durationMS - this.progressMS));
+                            } else {
+                                this.initialized = false;
+
+                            }
+
+
                         }
                         //System.out.println(this.durationMS);
                         //System.out.println(this.progressMS);
@@ -155,12 +175,8 @@ public class Player {
                 System.out.println("i got nothing");
             }
 
-            try {
-                Thread.sleep(10000);
-            } catch (InterruptedException e) {
-                // Handle the InterruptedException if needed
-            }
         }
+
 
         // Shut down the custom service's ExecutorService when you're done
         customService.shutdown();
