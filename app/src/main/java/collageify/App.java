@@ -1,6 +1,7 @@
 package collageify;
 
 import collageify.db.SQLAccess;
+import collageify.exceptions.JSONNotPresent;
 import collageify.exceptions.NoSPApiException;
 import collageify.service.collageify.Player;
 import org.springframework.boot.SpringApplication;
@@ -10,7 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication(scanBasePackages = "collageify")
 public class App {
-    public static void main(String[] args) throws Exception, NoSPApiException {
+    public static void main(String[] args) throws Exception, NoSPApiException, JSONNotPresent {
         /*SQLTime time = new SQLTime();
         System.out.println(time.getDate());
         System.out.println(time.getTime());

@@ -63,7 +63,9 @@ public class SPAccess {
 
             final Optional<GetUsersCurrentlyPlayingTrackRequest> request = Optional.of(this.getSpotifyApi().getUsersCurrentlyPlayingTrack().build());
 
-            return request.isPresent() ? Optional.of(request.get().getJson()) : Optional.empty();
+
+
+            return request.isPresent() ? Optional.ofNullable(request.get().getJson()) : Optional.empty();
         }else throw new NoSPApiException("opps");
 
     }

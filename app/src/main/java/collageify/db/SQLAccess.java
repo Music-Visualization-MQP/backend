@@ -95,19 +95,16 @@ public class SQLAccess implements IDBAccess {
             if (resultSet.next()){
                 SQLTime dateTime = new SQLTime();
 
-                preparedStatement = connect.prepareStatement("INSERT INTO played (play_id, user_id, play_date, play_time, spotify_uri, artist_name, album_name, track_name, popularity, duration_ms) VALUES (?,?,?,?,?,?,?,?,?,?)");
-                int playID = getNextID(0).orElseThrow(() -> new IllegalStateException("Value is not present"));
-                preparedStatement.setInt(1, (int) playID);
-                preparedStatement.setInt(2, (int) userID);
-                preparedStatement.setDate(3, dateTime.getDate());
-                preparedStatement.setTime(4, dateTime.getTime());
-                preparedStatement.setString(5, spURI);
-                preparedStatement.setString(6, artistName);
-                preparedStatement.setString(7, albumName);
-                preparedStatement.setString(8, trackName);
-                preparedStatement.setInt(9, (int) popularity);
-                preparedStatement.setInt(10, (int) durationMS);
-                
+                preparedStatement = connect.prepareStatement("INSERT INTO played (user_id, play_date, play_time, spotify_uri, artist_name, album_name, track_name, popularity, duration_ms) VALUES (?,?,?,?,?,?,?,?,?)");
+                preparedStatement.setInt(1, (int) userID);
+                preparedStatement.setDate(2, dateTime.getDate());
+                preparedStatement.setTime(3, dateTime.getTime());
+                preparedStatement.setString(4, spURI);
+                preparedStatement.setString(5, artistName);
+                preparedStatement.setString(6, albumName);
+                preparedStatement.setString(7, trackName);
+                preparedStatement.setInt(8, (int) popularity);
+                preparedStatement.setInt(9, (int) durationMS);
                 preparedStatement.executeUpdate();
             }
             //preparedStatement = connect.prepareStatement("INSERT INTO played (play_id, user_id)")

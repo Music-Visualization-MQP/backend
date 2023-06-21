@@ -50,6 +50,8 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
 
+    //collageify
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.15.2'
 
 
 }

@@ -1,11 +1,14 @@
 package collageify.service.collageify;
 import collageify.db.SQLAccess;
+import collageify.exceptions.JSONNotPresent;
 import collageify.exceptions.NoSPApiException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mysql.cj.PreparedQuery;
-
 import java.sql.SQLException;
 import java.util.Optional;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 public class Player {
 
     private Integer userID;
@@ -23,6 +26,8 @@ public class Player {
 
     private Boolean enoughPlayed;
 
+    private Boolean playing;
+
 
     public SPAccess spAccess;
 
@@ -30,7 +35,7 @@ public class Player {
         this.spAccess = new SPAccess(userID);
     }
 
-    public Player(Integer userID, String username, Integer progressMS, String spURI, String artistName, String albumName, String trackName, Integer popularity, Integer durationMS) throws NoSPApiException {
+    public void addInfo(Integer userID, String username, Integer progressMS, String spURI, String artistName, String albumName, String trackName, Integer popularity, Integer durationMS) throws NoSPApiException {
         this.userID = userID;
         this.username = username;
         this.progressMS = progressMS;
@@ -46,6 +51,14 @@ public class Player {
         } else{
             this.enoughPlayed = false;
         }
+    }
+
+    public void initProgress(Optional<JsonNode> node){
+        if(node.isPresent()){
+            this.progressMS = node.get().get("progress_ms").asInt();
+            this.durationMS = node.get().get("item").get("duration_ms").asInt();
+        }
+
     }
 
     public void UpdateProgress(Integer newProgressMS){
@@ -70,15 +83,37 @@ public class Player {
         }
     }
 
-    public void run() throws Exception, NoSPApiException{
+    private Optional<JsonNode>  responseToJson(Optional<String> response) throws JsonProcessingException, JSONNotPresent {
+        if(response.isPresent()){
+            return Optional.ofNullable(new ObjectMapper().readTree(response.get()));
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    public void run() throws Exception, NoSPApiException, JSONNotPresent{
         while (this.spAccess.credentials.get().isTokenValid()){
+
 
             System.out.println("waiting");
             if(Optional.ofNullable(this.spAccess.requestData()).isPresent()){
-                System.out.println(this.spAccess.requestData());
-                wait(2500);
+                System.out.println(responseToJson(this.spAccess.requestData()).get());
+
+
+                System.out.println(responseToJson(this.spAccess.requestData()).get().get("item").get("name").asText());
+                this.initProgress(responseToJson(this.spAccess.requestData()));
+                System.out.println(this.durationMS);
+                System.out.println(this.progressMS);
+
+
+                //System.out.println(this.spAccess.requestData());
+
             } else {
                 System.out.println("i got nothing");
+            } try {
+                Thread.sleep(2500);
+            } catch (InterruptedException e) {
+                // Handle the InterruptedException if needed
             }
         }
 
