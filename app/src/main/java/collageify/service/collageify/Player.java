@@ -90,11 +90,45 @@ public class Player {
             return Optional.empty();
         }
     }
+    public void run() throws Exception, NoSPApiException, JSONNotPresent {
+        CollageifyService customService = new CollageifyService();
+        while (this.spAccess.credentials.get().isTokenValid()) {
+            System.out.println("waiting");
 
-    public void run() throws Exception, NoSPApiException, JSONNotPresent{
+            if (Optional.ofNullable(this.spAccess.requestData()).isPresent()) {
+                Runnable task = () -> {
+                    try {
+                        System.out.println(responseToJson(this.spAccess.requestData()).get());
+                        System.out.println(responseToJson(this.spAccess.requestData()).get().get("item").get("name").asText());
+                        this.initProgress(responseToJson(this.spAccess.requestData()));
+                        System.out.println(this.durationMS);
+                        System.out.println(this.progressMS);
+                    } catch (Exception | NoSPApiException e) {
+                        // Handle any exceptions thrown during the task execution
+                    } catch (JSONNotPresent e) {
+                        throw new RuntimeException(e);
+                    }
+                };
+
+                // Submit the task to the custom service's ExecutorService
+                customService.executeTask(task);
+            } else {
+                System.out.println("i got nothing");
+            }
+
+            try {
+                Thread.sleep(2500);
+            } catch (InterruptedException e) {
+                // Handle the InterruptedException if needed
+            }
+        }
+
+        // Shut down the custom service's ExecutorService when you're done
+        customService.shutdown();
+    }
+
+    /*public void run() throws Exception, NoSPApiException, JSONNotPresent{
         while (this.spAccess.credentials.get().isTokenValid()){
-
-
             System.out.println("waiting");
             if(Optional.ofNullable(this.spAccess.requestData()).isPresent()){
                 System.out.println(responseToJson(this.spAccess.requestData()).get());
@@ -117,7 +151,7 @@ public class Player {
             }
         }
 
-    }
+    }*/
 
 
 

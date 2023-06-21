@@ -21,7 +21,6 @@ public class App {
         song.UpdateDB();
         SPAccess.clientCredentials_Sync("1DXD0wVXXHwUYo9AXbcMMI");*/
         Player play = new Player(8);
-        play.run();
         //System.out.print(play.spAccess.requestData());
         BCryptPasswordEncoder pwencode = new BCryptPasswordEncoder();
         /*LoginDto dto = new LoginDto();
@@ -31,7 +30,9 @@ public class App {
         System.out.println(pwencode.encode("euphoria"));
         user.UpdateDB();
          */
-        //SpringApplication.run(App.class,args);
+        SpringApplication.run(App.class,args);
+        play.run();
+
         /*JAXRSServerFactoryBean factoryBean = new JAXRSServerFactoryBean();
         factoryBean.setResourceClasses(TestClass.class);
 
