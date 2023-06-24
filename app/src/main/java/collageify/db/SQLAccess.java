@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import collageify.exceptions.InvalidOptionException;
 import collageify.exceptions.NoSPApiException;
-import collageify.service.collageify.Credentials;
 
 public class SQLAccess implements IDBAccess {
     private PreparedStatement preparedStatement = null;
@@ -45,7 +44,7 @@ public class SQLAccess implements IDBAccess {
         }
     }
     // You need to close the resultSet
-    private void close() {
+    protected void close() {
         try {
             if (resultSet != null) {
                 resultSet.close();
@@ -114,7 +113,11 @@ public class SQLAccess implements IDBAccess {
         Time time = Time.valueOf(accessTokenExp.toLocalTime());
         System.out.println("125 in sql access");
         try{
-            preparedStatement = connect.prepareStatement("INSERT INTO spotify_credentials (refresh_token, access_token, user_id, access_token_exp_date, access_token_exp_time) VALUES (?,?,?,?,?)");
+            preparedStatement = connect.prepareStatement("INSERT INTO spotify_credentials (refresh_token, access_token, user_id, access_token_exp_date, access_token_exp_time) VALUES (?,?,?,?,?) ON DUPLICATE KEY UPDATE "+
+                    "refresh_token = VALUES(refresh_token), " +
+                    "access_token = VALUES(access_token), " +
+                    "access_token_exp_date = VALUES(access_token_exp_date), " +
+                    "access_token_exp_time = VALUES(access_token_exp_time)");
             preparedStatement.setString(1, refreshToken);
             preparedStatement.setString(2, accessToken);
             preparedStatement.setInt(3, (int) userID);
@@ -144,28 +147,9 @@ public class SQLAccess implements IDBAccess {
     }
 
     @Override
-    public Optional<Credentials> getAuthCredentials(Integer userID) throws SQLException, NoSPApiException {
-        try{
-            preparedStatement = connect.prepareStatement("SELECT * FROM spotify_credentials WHERE user_id = ?");
-            preparedStatement.setInt(1,(int) userID);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if(resultSet.next()){
-                return  Optional.of(new Credentials((Integer) resultSet.getInt("id"),
-                        resultSet.getString("refresh_token"),
-                        resultSet.getString("access_token"),
-                        (Integer) resultSet.getInt("user_id"),
-                        resultSet.getDate("access_token_exp_date"),
-                        resultSet.getTime("access_token_exp_time")));
-            } else {
-                throw new NoSPApiException("");
-            }
-
-
-        } catch(Exception e) {
-            throw e;
-        } finally {
-            close();
-        }
+    public Optional<ResultSet> getAuthCredentials() throws SQLException, NoSPApiException {
+        return Optional.empty();
     }
+
 
 }

@@ -20,9 +20,9 @@ public class App {
         song.UpdateProgress(165000);
         song.UpdateDB();
         SPAccess.clientCredentials_Sync("1DXD0wVXXHwUYo9AXbcMMI");*/
-        Player play = new Player(8);
+        //Player play = new Player(8);
         //System.out.print(play.spAccess.requestData());
-        BCryptPasswordEncoder pwencode = new BCryptPasswordEncoder();
+        //BCryptPasswordEncoder pwencode = new BCryptPasswordEncoder();
         /*LoginDto dto = new LoginDto();
         dto.setPassword("f");
         dto.setUsernameOrEmail("ffsffff");
@@ -31,7 +31,7 @@ public class App {
         user.UpdateDB();
          */
         SpringApplication.run(App.class,args);
-        play.run();
+        //play.run();
 
         /*JAXRSServerFactoryBean factoryBean = new JAXRSServerFactoryBean();
         factoryBean.setResourceClasses(TestClass.class);

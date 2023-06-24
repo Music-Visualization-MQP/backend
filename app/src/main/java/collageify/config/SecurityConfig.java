@@ -15,7 +15,6 @@ import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 public class SecurityConfig {
-    private UserDetailsService uds;
 
     /**
      *
@@ -23,7 +22,6 @@ public class SecurityConfig {
      */
 
     public SecurityConfig(UserDetailsService uds){
-        this.uds = uds;
     }
     /*
     new keyword added here, but it may cause issues...

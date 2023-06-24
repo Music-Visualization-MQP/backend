@@ -27,7 +27,6 @@ public class Player {
     private String artistName;
     private String albumName;
     private String trackName;
-    private String oldTrackName;
     private Integer popularity;
     private Integer durationMS;
 
@@ -35,6 +34,7 @@ public class Player {
 
     private Boolean playing;
     private String isrc;
+    private String oldIsrc;
     private JsonNode json;
 
 
@@ -116,66 +116,54 @@ public class Player {
     }
     public void run() throws Exception, NoSPApiException, JSONNotPresent {
         CollageifyService customService = new CollageifyService();
-        while (this.spAccess.credentials.get().isTokenValid()) {
+        /*while (this.spAccess.credentials.get().isTokenValid()) {
+
             System.out.println("waiting");
-
-
             if (Optional.ofNullable(this.spAccess.requestData()).isPresent()) {
-                Runnable task = () -> {
-                    Integer wait = 200;
-                    try {
-                        //System.out.println(responseToJson(this.spAccess.requestData()).get());
-                        //System.out.println(responseToJson(this.spAccess.requestData()).get().get("item").get("name").asText());
-                        if(this.initialized == false){
-                            System.out.println("116");
-                            this.initSong(responseToJson(this.spAccess.requestData()));
-                            this.json = responseToJson(this.spAccess.requestData()).get();
 
-                        } else {
-                            System.out.println("121");
-                            this.UpdateProgress(responseToJson(this.spAccess.requestData()).get().get("progress_ms").asInt());
-                            System.out.println(this.enoughPlayed);
-                            //unsure if this is needed
-                            ExecutorService executorService = Executors.newSingleThreadExecutor();
-                            Future<?> future = executorService.submit(() -> {
-                                try {
-                                    this.UpdateDB();
-                                } catch (Exception e) {
-                                    throw new RuntimeException(e);
-                                }
-                            });
-                            future.get();
-                            System.out.println(responseToJson(this.spAccess.requestData()).get().get("item").get("name").asText());
-                            System.out.println(this.trackName);
-                            System.out.println("sleeping" + (this.durationMS - this.progressMS));
-                            System.out.println("should be true "+ (this.trackName.equals(responseToJson(this.spAccess.requestData()).get().get("item").get("name").asText())));
-                            if(this.oldTrackName.equals(responseToJson(this.spAccess.requestData()).get().get("item").get("name").asText())){
-                                this.UpdateProgress(responseToJson(this.spAccess.requestData()).get().get("progress_ms").asInt());
-                                System.out.println("sleeping" + (this.durationMS - this.progressMS));
-                                Thread.sleep((this.durationMS - this.progressMS));
-                            } else {
-                                this.initialized = false;
-
-                            }
-
-
+                //System.out.println(responseToJson(this.spAccess.requestData()).get());
+                //System.out.println(responseToJson(this.spAccess.requestData()).get().get("item").get("name").asText());
+                if (this.spAccess.requestData().get().isEmpty()) {
+                    Thread.sleep(5000);
+                    System.out.println("nothing playing");
+                } else if (this.initialized == false) {
+                    System.out.println("116");
+                    this.initSong(responseToJson(this.spAccess.requestData()));
+                    this.json = responseToJson(this.spAccess.requestData()).get();
+                    System.out.println("going to sleep");
+                    Thread.sleep(5000);
+                } else if (this.initialized == true) {
+                    System.out.println("121");
+                    this.UpdateProgress(responseToJson(this.spAccess.requestData()).get().get("progress_ms").asInt());
+                    System.out.println(this.enoughPlayed);
+                    //unsure if this is needed
+                    ExecutorService executorService = Executors.newSingleThreadExecutor();
+                    Future<?> future = executorService.submit(() -> {
+                        try {
+                            this.UpdateDB();
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
                         }
-                        //System.out.println(this.durationMS);
-                        //System.out.println(this.progressMS);
-                    } catch (Exception | NoSPApiException e) {
-                        // Handle any exceptions thrown during the task execution
-                    } catch (JSONNotPresent e) {
-                        throw new RuntimeException(e);
-                    }
-                };
+                    });
+                    future.get();
+                    System.out.println(responseToJson(this.spAccess.requestData()).get().get("item").get("name").asText());
+                    System.out.println(this.trackName);
+                    oldIsrc = isrc;
+                    this.UpdateProgress(responseToJson(this.spAccess.requestData()).get().get("progress_ms").asInt());
+                    System.out.println("sleeping " + (this.durationMS - this.progressMS));
 
-                // Submit the task to the custom service's ExecutorService
-                customService.executeTask(task);
-            } else {
-                System.out.println("i got nothing");
+                    //System.out.println(this.durationMS);
+                    //System.out.println(this.progressMS);
+
+
+                    // Submit the task to the custom service's ExecutorService
+                    Thread.sleep(5000);
+                } else {
+                    System.out.println("i got nothing");
+                }
+
             }
-
-        }
+        }*/
 
 
         // Shut down the custom service's ExecutorService when you're done

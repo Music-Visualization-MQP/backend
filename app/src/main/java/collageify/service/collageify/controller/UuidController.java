@@ -2,9 +2,9 @@ package collageify.service.collageify.controller;
 import java.util.UUID;
 public class UuidController {
     private static final Object lock = new Object();
-    public static String generateUUID() {
+    public static UUID generateUUID() {
         synchronized (lock) {
-            return UUID.randomUUID().toString();
+            return UUID.randomUUID();
         }
     }
 }

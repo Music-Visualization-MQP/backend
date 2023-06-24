@@ -1,4 +1,4 @@
-package collageify.service.collageify;
+package collageify.service.collageify.controller;
 
 import java.sql.Date;
 import java.sql.Time;
