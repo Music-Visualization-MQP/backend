@@ -1,7 +1,8 @@
-package collageify.service.collageify;
+package collageify.service.collageify.entities;
 import collageify.db.SQLAccess;
 import collageify.exceptions.JSONNotPresent;
 import collageify.exceptions.NoSPApiException;
+import collageify.service.collageify.CollageifyService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mysql.cj.PreparedQuery;
 import java.sql.SQLException;

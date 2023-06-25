@@ -1,6 +1,7 @@
 package collageify.service.collageify.controller;
 
 import collageify.exceptions.NoSPApiException;
+import collageify.service.collageify.entities.ProcessedCredentials;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,7 +14,8 @@ public class PlayerController {
     private ExecutorService executorService;
     private UuidController uuid;
 
-    Map<UUID, ProcessedCredentials> credentialsMap = Collections.synchronizedMap(new HashMap<>());
+    private Map<UUID, ProcessedCredentials> credentialsMap = Collections.synchronizedMap(new HashMap<>());
+    private Map<UUID, ProcessedCredentials> expiredCredsMap = Collections.synchronizedMap(new HashMap<>());
     private SqlController sql = new SqlController();
 
 
@@ -37,18 +39,21 @@ public class PlayerController {
     }
     private void filterExpiredCredentials() {
         Date now = new Date();
-        Map<UUID, ProcessedCredentials> expiredCredsMap = Collections.synchronizedMap(new HashMap<>());
-
         for (ProcessedCredentials creds : this.credentialsMap.values()) {
             if (creds.getAccessTokenExpDate().before(now) ||
                     (creds.getAccessTokenExpDate().equals(now) && creds.getAccessTokenExpTime().before(new Time(now.getTime())))) {
                 expiredCredsMap.put(creds.getUuid(), creds);
             }
         }
-        // Optionally, you can remove the expired credentials from the original map
         credentialsMap.keySet().removeAll(expiredCredsMap.keySet());
+    }
 
-        // Use the expiredCredsMap as needed
-        // ...
+    private void getNewTokens(){
+        if(!this.expiredCredsMap.isEmpty()){
+            for (ProcessedCredentials credentials: this.expiredCredsMap.values()){
+
+
+            }
+        }
     }
 }

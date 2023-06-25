@@ -62,7 +62,6 @@ public class CallbackController {
              */
             SQLAccess sql = new SQLAccess();
             sql.estConnection();
-            sql.addSpotifyCredentials(8,spotifyApi.getAccessToken(),spotifyApi.getRefreshToken(), LocalDateTime.now().plusSeconds(authorizationCodeCredentials.getExpiresIn()));
         } catch (IOException | SpotifyWebApiException | org.apache.hc.core5.http.ParseException | SQLException e){
             System.out.println("error:" + e.getMessage());
         }

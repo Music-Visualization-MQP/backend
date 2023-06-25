@@ -1,8 +1,10 @@
-package collageify.service.collageify;
+package collageify.service.collageify.controller;
 import collageify.exceptions.NoSPApiException;
-import collageify.service.collageify.controller.Credentials;
+import collageify.service.collageify.entities.ProcessedCredentials;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
+import se.michaelthelin.spotify.model_objects.credentials.AuthorizationCodeCredentials;
+import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeRefreshRequest;
 import se.michaelthelin.spotify.requests.data.player.GetUsersCurrentlyPlayingTrackRequest;
 import org.apache.hc.core5.http.ParseException;
 
@@ -10,21 +12,13 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Optional;
 
-public class SPAccess {
+public class SpotifyApiModule {
 
     //private final Integer id;
     private final Optional<SpotifyApi> spotifyApi = Optional.empty();
-    public Optional<Credentials> credentials;
+    SpotifyApiModule(ProcessedCredentials credentials) throws NoSPApiException, SQLException{
 
-    SPAccess(Integer userId) throws NoSPApiException, SQLException{
-        /*SQLAccess sql = new SQLAccess();
-        sql.estConnection();
-        this.credentials = sql.getAuthCredentials(userId);
-        if(credentials.isPresent()){
-            this.spotifyApi = spotifyApi(Optional.of(credentials.get().accessToken), Optional.of(credentials.get().refreshToken));
-        } else {
-            throw new NoSPApiException("asdlfsdf");
-        }*/
+
         //this.spotifyApi = spotifyApi(accessToken, refreshToken);
     }
     private static final String clientId = System.getenv("SP_CID");
@@ -57,6 +51,20 @@ public class SPAccess {
             return request.isPresent() ? Optional.ofNullable(request.get().getJson()) : Optional.empty();
         }else throw new NoSPApiException("opps");
 
+    }
+
+    public Optional<String> getNewAccessToken(String refreshToken) throws IOException, SpotifyWebApiException{
+        AuthorizationCodeRefreshRequest request = SpotifyApi.builder()
+                .setClientId(clientId)
+                .setClientSecret(clientSecret)
+                .setRefreshToken(refreshToken)
+                .build().authorizationCodeRefresh().build();
+        try{
+            AuthorizationCodeCredentials credentials = request.execute();
+            return Optional.of(credentials.getAccessToken());
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
