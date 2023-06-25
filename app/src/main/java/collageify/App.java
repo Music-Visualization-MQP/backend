@@ -2,6 +2,8 @@ package collageify;
 
 import collageify.exceptions.JSONNotPresent;
 import collageify.exceptions.NoSPApiException;
+import collageify.service.collageify.controller.PlayerController;
+import collageify.service.collageify.entities.Player;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -27,7 +29,8 @@ public class App {
         System.out.println(pwencode.encode("euphoria"));
         user.UpdateDB();
          */
-        SpringApplication.run(App.class,args);
+        PlayerController play = new PlayerController();
+        //SpringApplication.run(App.class,args);
         //play.run();
 
         /*JAXRSServerFactoryBean factoryBean = new JAXRSServerFactoryBean();

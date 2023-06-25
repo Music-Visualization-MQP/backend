@@ -1,4 +1,4 @@
-package collageify.service.collageify.spotify;
+package collageify.service.collageify.entities;
 
 import java.sql.Date;
 import java.sql.Time;

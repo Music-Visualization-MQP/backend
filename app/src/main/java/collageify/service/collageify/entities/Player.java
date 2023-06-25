@@ -3,6 +3,7 @@ import collageify.db.SQLAccess;
 import collageify.exceptions.JSONNotPresent;
 import collageify.exceptions.NoSPApiException;
 import collageify.service.collageify.CollageifyService;
+import collageify.service.collageify.controller.SpotifyApiModule;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mysql.cj.PreparedQuery;
 import java.sql.SQLException;
@@ -39,10 +40,10 @@ public class Player {
     private JsonNode json;
 
 
-    public SPAccess spAccess;
+    public SpotifyApiModule spAccess;
 
-    public Player(Integer userID) throws NoSPApiException, SQLException {
-        this.spAccess = new SPAccess(userID);
+    public Player(ProcessedCredentials credentials) throws NoSPApiException, SQLException {
+        this.spAccess = new SpotifyApiModule(credentials);
     }
 
    /* private void addInfo(Integer userID, String username, Integer progressMS, String spURI, String artistName, String albumName, String trackName, Integer popularity, Integer durationMS) throws NoSPApiException {
@@ -117,6 +118,7 @@ public class Player {
     }
     public void run() throws Exception, NoSPApiException, JSONNotPresent {
         CollageifyService customService = new CollageifyService();
+
         /*while (this.spAccess.credentials.get().isTokenValid()) {
 
             System.out.println("waiting");

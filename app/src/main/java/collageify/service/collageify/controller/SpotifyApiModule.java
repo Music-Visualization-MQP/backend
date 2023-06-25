@@ -16,7 +16,9 @@ public class SpotifyApiModule {
 
     //private final Integer id;
     private final Optional<SpotifyApi> spotifyApi = Optional.empty();
-    SpotifyApiModule(ProcessedCredentials credentials) throws NoSPApiException, SQLException{
+    private ProcessedCredentials credentials;
+    public SpotifyApiModule(ProcessedCredentials credentials) throws NoSPApiException, SQLException{
+
 
 
         //this.spotifyApi = spotifyApi(accessToken, refreshToken);
@@ -53,11 +55,11 @@ public class SpotifyApiModule {
 
     }
 
-    public Optional<String> getNewAccessToken(String refreshToken) throws IOException, SpotifyWebApiException{
+    public Optional<String> getNewAccessToken() throws IOException, SpotifyWebApiException{
         AuthorizationCodeRefreshRequest request = SpotifyApi.builder()
                 .setClientId(clientId)
                 .setClientSecret(clientSecret)
-                .setRefreshToken(refreshToken)
+                .setRefreshToken(this.credentials.getRefreshToken())
                 .build().authorizationCodeRefresh().build();
         try{
             AuthorizationCodeCredentials credentials = request.execute();
