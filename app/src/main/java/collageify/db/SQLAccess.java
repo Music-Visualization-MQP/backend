@@ -12,38 +12,16 @@ public class SQLAccess implements IDBAccess {
     private Statement statement = null;
     private ResultSet resultSet = null;
 
-    private Optional<Integer> getNextID(int option) throws Exception {  
-        try{
-            if(option == 0){
-                try{
-                    resultSet = connect.createStatement().executeQuery("SELECT MAX(play_id) FROM played;");
-                        if (resultSet.next()){
-                            return Optional.of((Integer) resultSet.getInt(1) + 1);
-                        } else {
-                            return Optional.empty();
-                        }
-                } catch (Exception e){
-                    throw e; 
-                }
-            } else if (option == 1){
-                try{
-                    resultSet = connect.createStatement().executeQuery("SELECT MAX(user_id) FROM users;");
-                        if (resultSet.next()){
-                            return Optional.of((Integer) resultSet.getInt(1) + 1);
-                        } else {
-                            return Optional.empty();
-                        }
-                } catch (Exception e){
-                    throw e; 
-                }
-            } else {
-                throw new InvalidOptionException(option);
-            }
-        } catch (Exception e) {
-            throw e;
-        }
-    }
     // You need to close the resultSet
+
+    /**
+     * @throws SQLException
+     * This is for side effect only
+     *
+     * the side effect of the close() is to close the connection with the
+     * database if any of the values are not null they are closed using
+     * the close function definied by their classes
+     */
     protected void close() {
         try {
             if (resultSet != null) {
@@ -62,6 +40,13 @@ public class SQLAccess implements IDBAccess {
         }
     }
 
+    /**
+     *
+     * @throws SQLException
+     * This method is for side effect only
+     *
+     * Its side effect is to conect to the database by changing the state of the connect variable
+     */
     @Override
     public void estConnection() throws SQLException {
         try {

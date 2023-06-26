@@ -32,18 +32,18 @@ public class SqlController extends SQLAccess implements IDBAccess  {
             PreparedStatement preparedStatement = connect.prepareStatement("SELECT * FROM spotify_credentials");
             //preparedStatement.setInt(1,(int) userID);
             ResultSet resultSet = preparedStatement.executeQuery();
-            if(resultSet.next()){
+            return Optional.of(resultSet);
+            /*if(resultSet.next()){
                 System.out.println(resultSet.getInt("id"));
-                return Optional.of(resultSet);
-                /*return  Optional.of(new Credentials((Integer) resultSet.getInt("id"),
+                *//*return  Optional.of(new Credentials((Integer) resultSet.getInt("id"),
                         resultSet.getString("refresh_token"),
                         resultSet.getString("access_token"),
                         (Integer) resultSet.getInt("user_id"),
                         resultSet.getDate("access_token_exp_date"),
-                        resultSet.getTime("access_token_exp_time")));*/
+                        resultSet.getTime("access_token_exp_time")));*//*
             } else {
                 throw new NoSPApiException("");
-            }
+            }*/
 
 
         } catch(Exception e) {

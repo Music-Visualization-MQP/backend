@@ -25,6 +25,7 @@ public class ProcessedCredentials {
         this.accessTokenExpDate = accessTokenExpDate;
         this.accessTokenExpTime = accessTokenExpTime;
     }
+
     //getters
     public UUID getUuid() { return uuid; }
     Integer getId() { return id; }
