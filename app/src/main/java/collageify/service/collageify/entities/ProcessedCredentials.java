@@ -35,7 +35,7 @@ public class ProcessedCredentials {
     public Date getAccessTokenExpDate() { return accessTokenExpDate; }
     public Time getAccessTokenExpTime() { return accessTokenExpTime; }
 
-    public void setAccessToken(Optional<String> accessToken) {this.accessToken = accessToken.orElseThrow(); }
+    public void setAccessToken(Optional<RefreshCredentials> accessToken) {this.accessToken = accessToken.get().accessToken.orElseThrow(); }
 
     //setters
 /*    public void setUuid(UUID uuid) { this.uuid = uuid; }

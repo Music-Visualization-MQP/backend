@@ -31,6 +31,11 @@ public class CallbackController {
     @Autowired
     private UserRepository usrRepo;
 
+    /**
+     * This function does not consume anything and is a resd endpoint for the client
+     *
+     * @return produces a uri that allows a user to grant collageify access to their data
+     */
     @GetMapping("/loading")
     @ResponseBody
     public String spotifyLogin() {
@@ -53,12 +58,11 @@ public class CallbackController {
             spotifyApi.setAccessToken(authorizationCodeCredentials.getAccessToken());
             spotifyApi.setRefreshToken(authorizationCodeCredentials.getRefreshToken());
             System.out.println("expires in:" + authorizationCodeCredentials.getExpiresIn());
-            /**
-             * the code below this is realy bad
-             * and  needs to be (refactored?) whatever
-             * just make this a private class that takes the arguments
-             * and gives them to the playing side of the server
-             *
+            /*
+              the code below this is realy bad
+              and  needs to be (refactored?) whatever
+              just make this a private class that takes the arguments
+              and gives them to the playing side of the server
              */
             SQLAccess sql = new SQLAccess();
             sql.estConnection();

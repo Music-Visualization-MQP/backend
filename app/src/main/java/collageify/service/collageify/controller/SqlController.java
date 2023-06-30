@@ -25,6 +25,7 @@ public class SqlController extends SQLAccess implements IDBAccess  {
             throw e;
         }
     }
+    //this is like optional hell
     @Override
     public Optional<ResultSet> getAuthCredentials() throws SQLException, NoSPApiException {
         estConnection();

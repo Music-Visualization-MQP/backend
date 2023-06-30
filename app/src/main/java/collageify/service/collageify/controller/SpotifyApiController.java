@@ -10,18 +10,28 @@ import se.michaelthelin.spotify.requests.data.player.GetUsersCurrentlyPlayingTra
 import org.apache.hc.core5.http.ParseException;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.time.Instant;
 import java.util.Optional;
 
-public class SpotifyApiModule {
+public class SpotifyApiController {
 
     //private final Integer id;
     private final Optional<SpotifyApi> spotifyApi = Optional.empty();
     private ProcessedCredentials credentials;
-    public SpotifyApiModule(ProcessedCredentials credentials) throws NoSPApiException, SQLException{
 
-
-
+    /**
+     * This is the constructor, and thus it is side effect only, it consumes a ProcessedCredentials object,
+     * and stores it in a private field
+     *
+     * @param credentials
+     * @throws NoSPApiException catch all for issues related to the spotify api
+     * @throws SQLException thrown given any issues connecting to the database
+     */
+    public SpotifyApiController(ProcessedCredentials credentials) throws NoSPApiException, SQLException{
+        this.credentials = credentials;
         //this.spotifyApi = spotifyApi(accessToken, refreshToken);
     }
     private static final String clientId = System.getenv("SP_CID");
@@ -55,7 +65,6 @@ public class SpotifyApiModule {
         }else throw new NoSPApiException("opps");
 
     }
-
     public Optional<RefreshCredentials> getNewAccessToken() throws IOException, SpotifyWebApiException{
         AuthorizationCodeRefreshRequest request = SpotifyApi.builder()
                 .setClientId(clientId)
@@ -63,8 +72,10 @@ public class SpotifyApiModule {
                 .setRefreshToken(this.credentials.getRefreshToken())
                 .build().authorizationCodeRefresh().build();
         try{
+
             AuthorizationCodeCredentials credentials = request.execute();
-            return new ProcessedCredentials(credentials.getAccessToken());
+            long millis = Instant.now().toEpochMilli() + credentials.getExpiresIn();
+            return Optional.of(new RefreshCredentials(credentials.getAccessToken(), new Date(millis), new Time(millis))) ;
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }

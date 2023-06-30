@@ -66,7 +66,7 @@ public class PlayerController {
     private void getNewTokens() throws SQLException, NoSPApiException, IOException, SpotifyWebApiException {
         if(!this.expiredCredsMap.isEmpty()){
             for (ProcessedCredentials credentials: this.expiredCredsMap.values()){
-                SpotifyApiModule spotify = new SpotifyApiModule(credentials);
+                SpotifyApiController spotify = new SpotifyApiController(credentials);
                 credentials.setAccessToken(Optional.of(spotify.getNewAccessToken().orElseThrow()));
                 System.out.print(credentials.getAccessToken());
 
