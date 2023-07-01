@@ -1,9 +1,7 @@
 package collageify;
 
-import collageify.exceptions.JSONNotPresent;
-import collageify.exceptions.NoSPApiException;
-import collageify.service.collageify.controller.PlayerController;
-import collageify.service.collageify.entities.Player;
+import collageify.web.exceptions.JSONNotPresent;
+import collageify.web.exceptions.NoSPApiException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
