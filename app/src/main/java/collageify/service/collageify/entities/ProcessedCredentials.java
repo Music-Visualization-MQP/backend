@@ -1,8 +1,12 @@
 package collageify.service.collageify.entities;
 
 import collageify.exceptions.NoSPApiException;
+import collageify.service.collageify.controller.SpotifyApiController;
+import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 
+import java.io.IOException;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.sql.Time;
 import java.util.Optional;
 import java.util.UUID;
@@ -35,7 +39,7 @@ public class ProcessedCredentials {
     public Date getAccessTokenExpDate() { return accessTokenExpDate; }
     public Time getAccessTokenExpTime() { return accessTokenExpTime; }
 
-    public void setAccessToken(Optional<RefreshCredentials> accessToken) {this.accessToken = accessToken.get().accessToken.orElseThrow(); }
+    public void setAccessToken(Optional<RefreshCredentials> accessToken) { }
 
     //setters
 /*    public void setUuid(UUID uuid) { this.uuid = uuid; }

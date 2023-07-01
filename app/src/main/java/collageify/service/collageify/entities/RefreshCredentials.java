@@ -5,21 +5,20 @@ import java.sql.Time;
 import java.util.Optional;
 
 public class RefreshCredentials {
-    Optional<String> accessToken;
-    Optional<Date> accessTokenExpDate;
-    Optional<Time> accessTokenExpTime;
+    String accessToken;
+    Date accessTokenExpDate;
+    Time accessTokenExpTime;
 
     public RefreshCredentials(String accessToken, Date date, Time time){
-        if(accessToken.isPresent() && date.isPresent() && time.isPresent()){
 
-            this.accessToken = accessToken;
-            this.accessTokenExpDate = date;
-            this.accessTokenExpTime = time;
-        }
+        this.accessToken = accessToken;
+        this.accessTokenExpDate = date;
+        this.accessTokenExpTime = time;
+
     }
-    Optional<String> getAccessToken(){ return this.accessToken; }
-    Optional<Date> getExpDate(){ return this.accessTokenExpDate;}
-    Optional<Time> getExpTime(){return this.accessTokenExpTime;}
+    Optional<String> getAccessToken(){ return Optional.of(this.accessToken); }
+    Optional<Date> getExpDate(){ return Optional.of(this.accessTokenExpDate);}
+    Optional<Time> getExpTime(){return Optional.of(this.accessTokenExpTime);}
 
 
 

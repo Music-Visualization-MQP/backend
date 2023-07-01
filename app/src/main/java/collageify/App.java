@@ -29,8 +29,8 @@ public class App {
         System.out.println(pwencode.encode("euphoria"));
         user.UpdateDB();
          */
-        PlayerController play = new PlayerController();
-        //SpringApplication.run(App.class,args);
+        //PlayerController play = new PlayerController();
+        SpringApplication.run(App.class,args);
         //play.run();
 
         /*JAXRSServerFactoryBean factoryBean = new JAXRSServerFactoryBean();

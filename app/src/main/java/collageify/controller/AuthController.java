@@ -7,6 +7,7 @@ import collageify.repository.UserRepository;
 import collageify.repository.RoleRepository;
 
 
+import collageify.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeUriRequest;
 
-import java.util.Collections;
+import io.jsonwebtoken.*;
+
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -58,6 +61,9 @@ public class AuthController {
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
                 loginDto.getUsernameOrEmail(), loginDto.getPassword());
         Authentication auth = authMgr.authenticate(token);
+        if(auth.isAuthenticated()){
+            return new ResponseEntity<>(generateToken(loginDto.getUsernameOrEmail()), HttpStatus.OK);
+        }
         SecurityContextHolder.getContext().setAuthentication(auth);
         return new ResponseEntity<>("user signed in ur welcme." + token , HttpStatus.OK);
     }
@@ -80,6 +86,19 @@ public class AuthController {
         usrRepo.save(user);
 
         return new ResponseEntity<>("Registered! if youre not redirected soon... you should re-evaluate", HttpStatus.OK);
+    }
+    public String generateToken(String username){
+        Map<String, Object> claims = new HashMap<>();
+        return createToken(claims,username);
+    }
+    private String createToken(Map<String, Object> claims, String username){
+        Date now = new Date(System.currentTimeMillis());
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(username)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis()+1000*60*60))
+                .signWith(JwtUtils.getSignKey(), SignatureAlgorithm.HS256).compact();
     }
 
 }
