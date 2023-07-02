@@ -1,5 +1,7 @@
 package collageify.collageify.entities;
 
+import collageify.web.exceptions.NoSPApiException;
+
 import java.sql.Date;
 import java.sql.Time;
 import java.util.Optional;
@@ -33,7 +35,20 @@ public class ProcessedCredentials {
     public Date getAccessTokenExpDate() { return accessTokenExpDate; }
     public Time getAccessTokenExpTime() { return accessTokenExpTime; }
 
-    public void setAccessToken(Optional<RefreshCredentials> accessToken) { }
+    public void setAccessToken(Optional<RefreshCredentials> accessToken) throws NoSPApiException {
+        if(accessToken.isPresent()){
+            RefreshCredentials refresh = accessToken.get();
+            this.accessToken = refresh.accessToken;
+            this.accessTokenExpDate = refresh.accessTokenExpDate;
+            this.accessTokenExpTime = refresh.accessTokenExpTime;
+
+        }else throw new NoSPApiException("set access token fault");
+    }
+
+    public Boolean isValid(){
+        long millis = System.currentTimeMillis();
+        return millis < this.accessTokenExpDate.getTime();
+    }
 
     //setters
 /*    public void setUuid(UUID uuid) { this.uuid = uuid; }

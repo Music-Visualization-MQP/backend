@@ -1,4 +1,5 @@
 package collageify.collageify.entities;
+import collageify.collageify.controller.SpotifyApiController;
 import collageify.collageify.db.SQLAccess;
 import collageify.web.exceptions.JSONNotPresent;
 import collageify.web.exceptions.NoSPApiException;
@@ -36,10 +37,11 @@ public class Player {
     private JsonNode json;
 
 
-    //public SpotifyApiController spAccess;
+    public SpotifyApiController spotify;
 
-    public Player(ProcessedCredentials credentials) throws NoSPApiException, SQLException {
+    public Player(SpotifyApiController spotify, ProcessedCredentials credentials) throws NoSPApiException, SQLException {
         this.credentials = credentials;
+        this.spotify = spotify;
     }
 
    /* private void addInfo(Integer userID, String username, Integer progressMS, String spURI, String artistName, String albumName, String trackName, Integer popularity, Integer durationMS) throws NoSPApiException {
@@ -112,10 +114,10 @@ public class Player {
             return Optional.empty();
         }
     }
-    public void run() throws Exception, NoSPApiException, JSONNotPresent {
+    /*public void run() throws Exception, NoSPApiException, JSONNotPresent {
         CollageifyService customService = new CollageifyService();
 
-        /*while (this.spAccess.credentials.get().isTokenValid()) {
+        while (this.spAccess.credentials.get().isTokenValid()) {
 
             System.out.println("waiting");
             if (Optional.ofNullable(this.spAccess.requestData()).isPresent()) {
@@ -162,15 +164,26 @@ public class Player {
                 }
 
             }
-        }*/
+        }
 
 
         // Shut down the custom service's ExecutorService when you're done
         customService.shutdown();
-    }
+    }*/
 
-    /*public void run() throws Exception, NoSPApiException, JSONNotPresent{
-        while (this.spAccess.credentials.get().isTokenValid()){
+    public void run() throws Exception, NoSPApiException, JSONNotPresent{
+        //System.out.println(credentials.getAccessTokenExpTime() + " " +this.credentials.getAccessTokenExpDate());
+        while(credentials.isValid()){
+            System.out.println("177");
+            Optional<String> requestData = this.spotify.requestData(credentials);
+            if(requestData.isPresent()){
+                System.out.println(requestData.get());
+                wait(2500);
+            }
+
+        }
+
+        /*while (this.spAccess.credentials.get().isTokenValid()){
             System.out.println("waiting");
             if(Optional.ofNullable(this.spAccess.requestData()).isPresent()){
                 System.out.println(responseToJson(this.spAccess.requestData()).get());
@@ -190,10 +203,10 @@ public class Player {
                 Thread.sleep(2500);
             } catch (InterruptedException e) {
                 // Handle the InterruptedException if needed
-            }
-        }
+            }*/
+    }
 
-    }*/
+}
 
 
 
@@ -212,5 +225,3 @@ public class Player {
     }
     void setUserName; */
 
-
-}

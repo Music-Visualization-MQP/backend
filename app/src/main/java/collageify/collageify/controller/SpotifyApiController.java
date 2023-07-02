@@ -37,12 +37,11 @@ public class SpotifyApiController {
     }*/
     private static final String clientId = System.getenv("SP_CID");
     private static final String clientSecret = System.getenv("SP_S");
-    private Optional<SpotifyApi> spotifyApi(Optional<String> accessToken, Optional<String> refreshToken) throws NoSPApiException {
+    private Optional<SpotifyApi> spotifyApi(Optional<ProcessedCredentials> credentials) throws NoSPApiException {
         final Optional<SpotifyApi> returnVal;
-        if(accessToken.isPresent() && refreshToken.isPresent()){
+        if(credentials.isPresent()){
             returnVal = Optional.of(new SpotifyApi.Builder()
-                    .setRefreshToken(refreshToken.get())
-                    .setAccessToken(accessToken.get())
+                    .setAccessToken(credentials.get().getAccessToken())
                     .build());
             System.out.print("built api");
 
@@ -58,7 +57,8 @@ public class SpotifyApiController {
         } else throw new NoSPApiException("invalid spotify api");
     }
     public Optional<String> requestData(ProcessedCredentials credentials) throws NoSPApiException, IOException, ParseException, SpotifyWebApiException {
-        final Optional<GetUsersCurrentlyPlayingTrackRequest> request = Optional.of(this.getSpotifyApi().getUsersCurrentlyPlayingTrack().build());
+        final Optional<SpotifyApi> api =  spotifyApi(Optional.of(credentials));
+        final Optional<GetUsersCurrentlyPlayingTrackRequest> request = Optional.of(api.get().getUsersCurrentlyPlayingTrack().build());
 
         return request.isPresent() ? Optional.ofNullable(request.get().getJson()) : Optional.empty();
         /*if(this.spotifyApi.isPresent()){
@@ -76,9 +76,8 @@ public class SpotifyApiController {
                 .setRefreshToken(credentials.getRefreshToken())
                 .build().authorizationCodeRefresh().build();
         try{
-
             AuthorizationCodeCredentials refreshCredentials = request.execute();
-            long millis = Instant.now().toEpochMilli() + refreshCredentials.getExpiresIn();
+            long millis = Instant.now().toEpochMilli() + (refreshCredentials.getExpiresIn() * 1000);
             return Optional.of(new RefreshCredentials(refreshCredentials.getAccessToken(), new Date(millis), new Time(millis))) ;
         } catch (ParseException e) {
             throw new RuntimeException(e);

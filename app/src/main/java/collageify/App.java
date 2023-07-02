@@ -25,13 +25,11 @@ public class App {
         dto.setPassword("f");
         dto.setUsernameOrEmail("ffsffff");
         System.out.println(new AuthController().authenticateUser(dto));
-        System.out.println(pwencode.encode("euphoria"));
         user.UpdateDB();
          */
         PlayerController play = new PlayerController();
         //SpringApplication.run(App.class,args);
-        play.filterExpiredCredentials();
-        play.getNewTokens();
+        play.run();
         //play.run();
 
         /*JAXRSServerFactoryBean factoryBean = new JAXRSServerFactoryBean();
