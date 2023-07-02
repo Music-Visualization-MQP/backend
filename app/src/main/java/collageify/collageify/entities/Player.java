@@ -7,6 +7,7 @@ import collageify.collageify.service.CollageifyService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.sql.SQLException;
+import java.util.Objects;
 import java.util.Optional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,8 +16,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 public class Player {
     private ProcessedCredentials credentials;
-    private boolean initialized;
-    private Integer userID = 8;
+    private Integer userID;
     private String username;
 
     private Integer progressMS;
@@ -42,6 +42,7 @@ public class Player {
     public Player(SpotifyApiController spotify, ProcessedCredentials credentials) throws NoSPApiException, SQLException {
         this.credentials = credentials;
         this.spotify = spotify;
+        this.userID = this.credentials.getUserID();
     }
 
    /* private void addInfo(Integer userID, String username, Integer progressMS, String spURI, String artistName, String albumName, String trackName, Integer popularity, Integer durationMS) throws NoSPApiException {
@@ -64,11 +65,9 @@ public class Player {
 
     public void initSong(Optional<JsonNode> node){
         if(node.isPresent()){
-            this.initialized = true;
             this.progressMS = node.get().get("progress_ms").asInt();
             this.durationMS = node.get().get("item").get("duration_ms").asInt();
             this.isrc = node.get().get("item").get("external_ids").get("isrc").asText();
-            this.username = node.get().get("context").get("uri").asText();
             this.spURI = node.get().get("item").get("uri").asText();
             this.artistName = node.get().get("item").get("artists").get(0).get("name").asText();
             this.albumName = node.get().get("item").get("album").get("name").asText();
@@ -98,7 +97,7 @@ public class Player {
                 System.out.println("updating db");
                 sql.estConnection();
                 System.out.println("connected");
-                sql.addPlayed(8, username, spURI, artistName, albumName, trackName, popularity, durationMS, this.json.asText());
+                sql.addPlayed(8, username, spURI, artistName, albumName, trackName, popularity, durationMS, " ");
                 //sql.addPlayed(userID, username, spURI, artistName, albumName, trackName, popularity, durationMS, " ");
                 System.out.println("should be in there");
             } catch (Exception e){
@@ -172,15 +171,45 @@ public class Player {
     }*/
 
     public void run() throws Exception, NoSPApiException, JSONNotPresent{
+
         //System.out.println(credentials.getAccessTokenExpTime() + " " +this.credentials.getAccessTokenExpDate());
+        Optional<String> requestDataHistorical = Optional.empty();
         while(credentials.isValid()){
             System.out.println("177");
             Optional<String> requestData = this.spotify.requestData(credentials);
-            if(requestData.isPresent()){
-                System.out.println(requestData.get());
-                wait(2500);
+            if(credentials.getAccessTokenExpTime().getTime()
+                    - (5*60*1000) < System.currentTimeMillis()){
+                System.out.println("token expiring soon");
+                credentials.setAccessToken(Optional.of(this.spotify.getNewAccessToken(credentials).orElseThrow()));
+                System.out.println("token updated!");
             }
-
+            if(requestData.isPresent() && requestDataHistorical.isEmpty()){
+                System.out.println(requestData.get());
+                this.initSong(responseToJson(requestData));
+                requestDataHistorical = requestData;
+                synchronized (this) {
+                    wait(5000);
+                }
+            } else if(requestData.isPresent() && requestDataHistorical.isPresent()){
+                if(Objects.equals(responseToJson(requestData).get().get("item").get("uri").asText(),
+                        responseToJson(requestDataHistorical).get().get("item").get("uri").asText())){
+                    System.out.println("song has not changed");
+                    this.UpdateProgress(responseToJson(requestData).get().get("progress_ms").asInt());
+                    if(this.enoughPlayed){
+                        UpdateDB();
+                        System.out.println("Updated db waiting");
+                        requestDataHistorical = Optional.empty();
+                        synchronized (this){
+                            wait(this.durationMS - this.progressMS);
+                        }
+                    }
+                } else {
+                    requestDataHistorical = Optional.empty();
+                }
+                synchronized (this){
+                    wait(5000);
+                }
+            }
         }
 
         /*while (this.spAccess.credentials.get().isTokenValid()){
