@@ -1,5 +1,5 @@
 package collageify.web.entity;
-import collageify.web.db.SQLTime;
+import collageify.collageify.db.SQLTime;
 import lombok.*;
 
 import jakarta.persistence.*;
@@ -23,7 +23,6 @@ public class User {
     private String email;
     private String password;
     private java.sql.Date creation_date = new SQLTime().getDate();
-
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "user_roles",

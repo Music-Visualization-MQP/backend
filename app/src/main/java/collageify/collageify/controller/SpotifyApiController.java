@@ -26,14 +26,15 @@ public class SpotifyApiController {
      * This is the constructor, and thus it is side effect only, it consumes a ProcessedCredentials object,
      * and stores it in a private field
      *
-     * @param credentials
      * @throws NoSPApiException catch all for issues related to the spotify api
      * @throws SQLException thrown given any issues connecting to the database
      */
-    public SpotifyApiController(ProcessedCredentials credentials) throws NoSPApiException, SQLException{
+    public SpotifyApiController(){
+    }
+    /*public SpotifyApiController(ProcessedCredentials credentials) throws NoSPApiException, SQLException{
         this.credentials = credentials;
         //this.spotifyApi = spotifyApi(accessToken, refreshToken);
-    }
+    }*/
     private static final String clientId = System.getenv("SP_CID");
     private static final String clientSecret = System.getenv("SP_S");
     private Optional<SpotifyApi> spotifyApi(Optional<String> accessToken, Optional<String> refreshToken) throws NoSPApiException {
@@ -56,26 +57,29 @@ public class SpotifyApiController {
             return this.spotifyApi.get();
         } else throw new NoSPApiException("invalid spotify api");
     }
-    public Optional<String> requestData() throws NoSPApiException, IOException, ParseException, SpotifyWebApiException {
-        if(this.spotifyApi.isPresent()){
+    public Optional<String> requestData(ProcessedCredentials credentials) throws NoSPApiException, IOException, ParseException, SpotifyWebApiException {
+        final Optional<GetUsersCurrentlyPlayingTrackRequest> request = Optional.of(this.getSpotifyApi().getUsersCurrentlyPlayingTrack().build());
+
+        return request.isPresent() ? Optional.ofNullable(request.get().getJson()) : Optional.empty();
+        /*if(this.spotifyApi.isPresent()){
 
             final Optional<GetUsersCurrentlyPlayingTrackRequest> request = Optional.of(this.getSpotifyApi().getUsersCurrentlyPlayingTrack().build());
 
             return request.isPresent() ? Optional.ofNullable(request.get().getJson()) : Optional.empty();
-        }else throw new NoSPApiException("opps");
+        }else throw new NoSPApiException("opps");*/
 
     }
-    public Optional<RefreshCredentials> getNewAccessToken() throws IOException, SpotifyWebApiException{
+    public Optional<RefreshCredentials> getNewAccessToken(ProcessedCredentials credentials) throws IOException, SpotifyWebApiException{
         AuthorizationCodeRefreshRequest request = SpotifyApi.builder()
                 .setClientId(clientId)
                 .setClientSecret(clientSecret)
-                .setRefreshToken(this.credentials.getRefreshToken())
+                .setRefreshToken(credentials.getRefreshToken())
                 .build().authorizationCodeRefresh().build();
         try{
 
-            AuthorizationCodeCredentials credentials = request.execute();
-            long millis = Instant.now().toEpochMilli() + credentials.getExpiresIn();
-            return Optional.of(new RefreshCredentials(credentials.getAccessToken(), new Date(millis), new Time(millis))) ;
+            AuthorizationCodeCredentials refreshCredentials = request.execute();
+            long millis = Instant.now().toEpochMilli() + refreshCredentials.getExpiresIn();
+            return Optional.of(new RefreshCredentials(refreshCredentials.getAccessToken(), new Date(millis), new Time(millis))) ;
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }

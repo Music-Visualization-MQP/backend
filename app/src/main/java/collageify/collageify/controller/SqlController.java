@@ -1,7 +1,7 @@
 package collageify.collageify.controller;
 
-import collageify.web.db.IDBAccess;
-import collageify.web.db.SQLAccess;
+import collageify.collageify.db.IDBAccess;
+import collageify.collageify.db.SQLAccess;
 import collageify.web.exceptions.NoSPApiException;
 
 import java.sql.*;

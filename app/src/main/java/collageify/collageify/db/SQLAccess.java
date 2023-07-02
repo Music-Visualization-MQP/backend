@@ -1,4 +1,4 @@
-package collageify.web.db;
+package collageify.collageify.db;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.Optional;

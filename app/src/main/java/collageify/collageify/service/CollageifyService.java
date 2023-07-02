@@ -1,4 +1,4 @@
-package collageify.collageify;
+package collageify.collageify.service;
 
 
 import java.util.concurrent.Executor;

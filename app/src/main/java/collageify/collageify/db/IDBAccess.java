@@ -1,4 +1,4 @@
-package collageify.web.db;
+package collageify.collageify.db;
 
 import collageify.web.exceptions.NoSPApiException;
 

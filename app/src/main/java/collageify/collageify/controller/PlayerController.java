@@ -15,6 +15,8 @@ import java.util.concurrent.Executors;
 public class PlayerController {
     private ExecutorService executorService;
     private UuidController uuid;
+    private SpotifyApiController spotify = new SpotifyApiController();
+
 
     private Map<UUID, ProcessedCredentials> credentialsMap = Collections.synchronizedMap(new HashMap<>());
     private Map<UUID, ProcessedCredentials> expiredCredsMap = Collections.synchronizedMap(new HashMap<>());
@@ -24,8 +26,8 @@ public class PlayerController {
     public PlayerController() throws NoSPApiException, SQLException {
         executorService = Executors.newFixedThreadPool(100);
         getCredentials();
-        System.out.println(this.expiredCredsMap.values().hashCode());
-        System.out.println(this.credentialsMap.values().hashCode());
+        //System.out.println(this.expiredCredsMap.values().hashCode());
+        //System.out.println(this.credentialsMap.values().hashCode());
 
 
     }
@@ -52,25 +54,24 @@ public class PlayerController {
         }
 
     }
-    private void filterExpiredCredentials() {
+    public void filterExpiredCredentials() {
         Date now = new Date();
         for (ProcessedCredentials creds : this.credentialsMap.values()) {
             if (creds.getAccessTokenExpDate().before(now) ||
                     (creds.getAccessTokenExpDate().equals(now) && creds.getAccessTokenExpTime().before(new Time(now.getTime())))) {
-                expiredCredsMap.put(creds.getUuid(), creds);
+                this.expiredCredsMap.put(creds.getUuid(), creds);
             }
         }
-        credentialsMap.keySet().removeAll(expiredCredsMap.keySet());
+        this.credentialsMap.keySet().removeAll(expiredCredsMap.keySet());
     }
 
-    private void getNewTokens() throws SQLException, NoSPApiException, IOException, SpotifyWebApiException {
+    public void getNewTokens() throws SQLException, NoSPApiException, IOException, SpotifyWebApiException {
         if(!this.expiredCredsMap.isEmpty()){
             for (ProcessedCredentials credentials: this.expiredCredsMap.values()){
-                SpotifyApiController spotify = new SpotifyApiController(credentials);
-                credentials.setAccessToken(Optional.of(spotify.getNewAccessToken().orElseThrow()));
-                System.out.print(credentials.getAccessToken());
-
+                credentials.setAccessToken(Optional.of(this.spotify.getNewAccessToken(credentials).orElseThrow()));
             }
+            this.credentialsMap.putAll(this.expiredCredsMap);
+            this.expiredCredsMap.clear();
         }
     }
 }

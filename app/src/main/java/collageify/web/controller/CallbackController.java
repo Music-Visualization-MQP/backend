@@ -1,6 +1,6 @@
 package collageify.web.controller;
 
-import collageify.web.db.SQLAccess;
+import collageify.collageify.db.SQLAccess;
 import collageify.web.repository.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
