@@ -27,7 +27,7 @@ import io.jsonwebtoken.*;
 import java.util.*;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api")
 public class AuthController {
 
     @Autowired
@@ -45,11 +45,6 @@ public class AuthController {
 
     @Autowired
     private JwtService jwtService;
-    //@RequestMapping("/callback")
-    //@GetMapping("/callback")
-    public ResponseEntity<String> pee(){
-        return new ResponseEntity<>("hey there this works", HttpStatus.OK);
-    }
 
     /**
      *

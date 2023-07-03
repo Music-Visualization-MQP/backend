@@ -90,8 +90,9 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(request ->
                         request
-                                .requestMatchers("/api/auth/login/register", "/api/auth/login/authenticate").permitAll()
-                                .requestMatchers("/api/auth/login/**").authenticated()
+                                .requestMatchers("/api/login/register", "/api/login/authenticate").permitAll()
+                                .requestMatchers("/callback/**").authenticated()
+                                .requestMatchers("/api/login/**").authenticated()
                                 .anyRequest().authenticated())
                 .sessionManagement(session ->
                         session
