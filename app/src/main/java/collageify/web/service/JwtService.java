@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 @Service
 public class JwtService {
+    public JwtService(){}
     public String generateToken(String username){
         Map<String, Object> claims = new HashMap<>();
         return createToken(claims,username);

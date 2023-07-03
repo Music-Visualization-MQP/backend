@@ -1,27 +1,35 @@
 package collageify.web.config;
+import collageify.web.filters.JwtAuthFilter;
+import collageify.web.service.JwtService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 public class SecurityConfig {
+    @Autowired
+    private UserDetailsService uds;
 
     /**
      *
      * @param uds
      */
-
+    @Autowired
     public SecurityConfig(UserDetailsService uds){
+        this.uds = uds;
     }
     /*
     new keyword added here, but it may cause issues...
@@ -55,7 +63,7 @@ public class SecurityConfig {
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("http://localhost:4200"); // Replace with your Angular application's origin
+        configuration.addAllowedOrigin("http://localhost:4200");
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
 
@@ -79,7 +87,17 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http.csrf(AbstractHttpConfigurer::disable);
-        http.authorizeHttpRequests((auth) -> auth.anyRequest().permitAll());
+        http
+                .authorizeHttpRequests(request ->
+                        request
+                                .requestMatchers("/api/auth/login/register", "/api/auth/login/authenticate").permitAll()
+                                .requestMatchers("/api/auth/login/**").authenticated()
+                                .anyRequest().authenticated())
+                .sessionManagement(session ->
+                        session
+                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(new JwtAuthFilter(new JwtService(), uds), UsernamePasswordAuthenticationFilter.class);
+               //auth.anyRequest().permitAll());
         /*http.authorizeHttpRequests((authorize) -> authorize
                 .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()

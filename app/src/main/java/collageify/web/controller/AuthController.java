@@ -29,6 +29,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
+
     @Autowired
     private AuthenticationManager authMgr;
 
@@ -58,7 +59,7 @@ public class AuthController {
      *
      * The problem that i see is that the
      */
-    @PostMapping({"/signin", "/login"})
+    @PostMapping("/login/authenticate")
     public ResponseEntity<String> authenticateUser(@RequestBody LoginDto loginDto){
         //remove this this is probably bad teehee
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
@@ -70,7 +71,7 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(auth);
         return new ResponseEntity<>("user signed in ur welcme." + token , HttpStatus.OK);
     }
-    @PostMapping("/register")
+    @PostMapping("/login/register")
     public ResponseEntity<?> registerUser(@RequestBody RegisterDto registerDto){
         if(usrRepo.existsByUsername(registerDto.getUsername())){
             return new ResponseEntity<>("username is already taken", HttpStatus.BAD_REQUEST);
@@ -89,6 +90,27 @@ public class AuthController {
         usrRepo.save(user);
 
         return new ResponseEntity<>("Registered! if youre not redirected soon... you should re-evaluate", HttpStatus.OK);
+    }
+    @GetMapping("/login/test")
+    public ResponseEntity<?> handleRequest(@RequestHeader("Authorization") String authorizationHeader) {
+        // Extract the token from the Authorization header
+        String token = extractToken(authorizationHeader);
+
+        // Process the token or perform any necessary operations
+        // ...
+
+        return new ResponseEntity<>("good token!", HttpStatus.OK);
+    }
+
+    private String extractToken(String authorizationHeader) {
+        // Split the Authorization header value to extract the token
+        String[] parts = authorizationHeader.split("\\s+");
+
+        if (parts.length == 2 && parts[0].equalsIgnoreCase("Bearer")) {
+            return parts[1];
+        } else {
+            throw new IllegalArgumentException("Invalid Authorization header format");
+        }
     }
 
 }

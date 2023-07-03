@@ -27,9 +27,9 @@ public class App {
         System.out.println(new AuthController().authenticateUser(dto));
         user.UpdateDB();
          */
-        PlayerController play = new PlayerController();
-        //SpringApplication.run(App.class,args);
-        play.run();
+        //PlayerController play = new PlayerController();
+        SpringApplication.run(App.class,args);
+        //play.run();
         //play.run();
 
         /*JAXRSServerFactoryBean factoryBean = new JAXRSServerFactoryBean();
