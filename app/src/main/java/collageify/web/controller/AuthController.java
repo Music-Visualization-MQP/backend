@@ -61,10 +61,13 @@ public class AuthController {
                 loginDto.getUsernameOrEmail(), loginDto.getPassword());
         Authentication auth = authMgr.authenticate(token);
         if(auth.isAuthenticated()){
+
             return new ResponseEntity<>(jwtService.generateToken(loginDto.getUsernameOrEmail()), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("bad request", HttpStatus.BAD_REQUEST);
         }
-        SecurityContextHolder.getContext().setAuthentication(auth);
-        return new ResponseEntity<>("user signed in ur welcme." + token , HttpStatus.OK);
+        //SecurityContextHolder.getContext().setAuthentication(auth);
+        //return new ResponseEntity<>("user signed in ur welcme." + token , HttpStatus.OK);
     }
     @PostMapping("/login/register")
     public ResponseEntity<?> registerUser(@RequestBody RegisterDto registerDto){

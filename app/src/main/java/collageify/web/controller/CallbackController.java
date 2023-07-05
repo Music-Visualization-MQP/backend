@@ -77,7 +77,7 @@ public class CallbackController {
             spotifyApi.setRefreshToken(authorizationCodeCredentials.getRefreshToken());
             System.out.println("expires in:" + authorizationCodeCredentials.getExpiresIn());
             /*
-              the code below this is realy bad
+              the code below this is terrible
               and  needs to be (refactored?) whatever
               just make this a private class that takes the arguments
               and gives them to the playing side of the server

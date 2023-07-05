@@ -2,8 +2,10 @@ package collageify.web.config;
 import collageify.web.filters.JwtAuthFilter;
 import collageify.web.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -61,16 +63,20 @@ public class SecurityConfig {
 
     }*/
     @Bean
-    public CorsFilter corsFilter() {
+    public FilterRegistrationBean<CorsFilter> corsFilterRegistrationBean() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("http://localhost:4200");
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
+        configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
 
-        return new CorsFilter(source);
+        CorsFilter filter = new CorsFilter(source);
+        FilterRegistrationBean<CorsFilter> registrationBean = new FilterRegistrationBean<>(filter);
+        registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        return registrationBean;
     }
     @Bean
     public AuthenticationManager authenticationManager(
@@ -87,11 +93,12 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http.csrf(AbstractHttpConfigurer::disable);
+
         http
                 .authorizeHttpRequests(request ->
                         request
                                 .requestMatchers("/api/login/register", "/api/login/authenticate").permitAll()
-                                .requestMatchers("/callback/**").authenticated()
+                                .requestMatchers("/callback/loading").authenticated()
                                 .requestMatchers("/api/login/**").authenticated()
                                 .anyRequest().authenticated())
                 .sessionManagement(session ->

@@ -182,8 +182,7 @@ public class Player {
                 System.out.println("token expiring soon");
                 credentials.setAccessToken(Optional.of(this.spotify.getNewAccessToken(credentials).orElseThrow()));
                 System.out.println("token updated!");
-            }
-            if(requestData.isPresent() && requestDataHistorical.isEmpty()){
+            } if (requestData.isPresent() && requestDataHistorical.isEmpty()) {
                 System.out.println(requestData.get());
                 this.initSong(responseToJson(requestData));
                 requestDataHistorical = requestData;
@@ -206,9 +205,10 @@ public class Player {
                 } else {
                     requestDataHistorical = Optional.empty();
                 }
-                synchronized (this){
-                    wait(5000);
-                }
+
+            }
+            synchronized (this){
+                wait(5000);
             }
         }
 
