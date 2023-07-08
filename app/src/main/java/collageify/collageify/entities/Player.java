@@ -88,7 +88,7 @@ public class Player {
             this.enoughPlayed = false;
         }
     }
-
+// this needs to consume a db controller not make new one that's horrid
     private void UpdateDB() throws Exception{
         System.out.println(this.enoughPlayed);
         if(this.enoughPlayed){

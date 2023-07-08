@@ -9,6 +9,8 @@ import collageify.web.repository.RoleRepository;
 
 import collageify.web.service.JwtService;
 import collageify.web.utils.JwtUtils;
+
+import collageify.collageify.db.SQLAccess;
 import collageify.web.entity.Role;
 import collageify.web.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,9 +92,9 @@ public class AuthController {
         return new ResponseEntity<>("Registered! if youre not redirected soon... you should re-evaluate", HttpStatus.OK);
     }
     @GetMapping("/login/test")
-    public ResponseEntity<?> handleRequest(@RequestHeader("Authorization") String authorizationHeader) {
+    public ResponseEntity<?> handleRequest(@RequestHeader("Authorization") String authToken) {
         // Extract the token from the Authorization header
-        String token = extractToken(authorizationHeader);
+        String token = authToken;
 
         // Process the token or perform any necessary operations
         // ...

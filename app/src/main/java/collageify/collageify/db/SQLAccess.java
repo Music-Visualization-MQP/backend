@@ -91,23 +91,31 @@ public class SQLAccess implements IDBAccess {
     }
 
     @Override
-    public void addSpotifyCredentials(Integer userID, String accessToken, String refreshToken, LocalDateTime accessTokenExp) throws SQLException {
-        Timestamp timestamp = Timestamp.valueOf(accessTokenExp);
-        Date date = new Date(timestamp.getTime());
-        Time time = Time.valueOf(accessTokenExp.toLocalTime());
+    public void addSpotifyCredentials(String email, String accessToken, String refreshToken, long accessTokenExp) throws SQLException {
+
+        Date date = new Date(accessTokenExp);
+        Time time = new Time(accessTokenExp);
         System.out.println("125 in sql access");
         try{
-            preparedStatement = connect.prepareStatement("INSERT INTO spotify_credentials (refresh_token, access_token, user_id, access_token_exp_date, access_token_exp_time) VALUES (?,?,?,?,?) ON DUPLICATE KEY UPDATE "+
-                    "refresh_token = VALUES(refresh_token), " +
-                    "access_token = VALUES(access_token), " +
-                    "access_token_exp_date = VALUES(access_token_exp_date), " +
-                    "access_token_exp_time = VALUES(access_token_exp_time)");
-            preparedStatement.setString(1, refreshToken);
-            preparedStatement.setString(2, accessToken);
-            preparedStatement.setInt(3, (int) userID);
-            preparedStatement.setDate(4, date);
-            preparedStatement.setTime(5,time);
-            preparedStatement.executeUpdate();
+            Optional<Integer> optUserId = getUserIdByEmail(email);
+            Integer userId = null;
+            if(optUserId.isPresent()){
+                userId = optUserId.get();
+                preparedStatement = connect.prepareStatement("INSERT INTO spotify_credentials (refresh_token, access_token, user_id, access_token_exp_date, access_token_exp_time) VALUES (?,?,?,?,?) ON DUPLICATE KEY UPDATE "+
+                        "refresh_token = VALUES(refresh_token), " +
+                        "access_token = VALUES(access_token), " +
+                        "access_token_exp_date = VALUES(access_token_exp_date), " +
+                        "access_token_exp_time = VALUES(access_token_exp_time)");
+                preparedStatement.setString(1, refreshToken);
+                preparedStatement.setString(2, accessToken);
+                preparedStatement.setInt(3, (int) userId);
+                preparedStatement.setDate(4, date);
+                preparedStatement.setTime(5,time);
+                preparedStatement.executeUpdate();
+            } else {
+                throw new RuntimeException("userid could not be instantiated");
+            }
+
 
         } catch(Exception e) {
             throw e;
@@ -135,5 +143,53 @@ public class SQLAccess implements IDBAccess {
         return Optional.empty();
     }
 
+    /**
+     *
+     * @param email The method consumes a string represent the email of the user who's...
+     *             spotify information is being looked up, eventually username should also work
+     * @return This method produces a
+     * @throws SQLException
+     */
 
+    public Optional<Integer> getUserIdByEmail(String email) throws SQLException {
+        try {
+            estConnection();
+            PreparedStatement statement0 = connect.prepareStatement("SELECT user_id FROM users WHERE email = ?");
+            statement0.setString(1, email);
+            ResultSet result0 = statement0.executeQuery();
+            if(result0.next()) {
+                return Optional.of(result0.getInt("user_id"));
+            } else {
+                return Optional.empty();
+            }
+        } catch (SQLException e) {
+            throw e;
+        }
+
+    }
+
+    public Boolean checkIfCredsExistByEmail(String email) throws SQLException {
+        try{
+            estConnection();
+            PreparedStatement statement0 = connect.prepareStatement("SELECT user_id FROM users WHERE email = ?");
+            statement0.setString(1, email);
+            ResultSet result0 = statement0.executeQuery();
+            if(result0.next()){
+                PreparedStatement statement1 = connect.prepareStatement("SELECT id FROM spotify_credentials WHERE user_id = ?");
+                statement1.setInt(1, result0.getInt("user_id"));
+                ResultSet result1 = statement1.executeQuery();
+                if(result1.next()){
+                    return true;
+                }else{
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        } catch (SQLException e){
+            throw e;
+        } finally {
+            close();
+        }
+    }
 }
