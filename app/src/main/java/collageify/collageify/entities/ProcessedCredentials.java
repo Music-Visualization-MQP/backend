@@ -1,6 +1,7 @@
 package collageify.collageify.entities;
 
 import collageify.web.exceptions.NoSPApiException;
+import se.michaelthelin.spotify.SpotifyApi;
 
 import java.sql.Date;
 import java.sql.Time;
@@ -16,7 +17,9 @@ public class ProcessedCredentials {
     private Date accessTokenExpDate;
     private Time accessTokenExpTime;
 
-    public ProcessedCredentials(UUID uuid,Integer id, String refreshToken, String accessToken, Integer userID, Date accessTokenExpDate, Time accessTokenExpTime){
+    private SpotifyApi spotify;
+
+    public ProcessedCredentials(UUID uuid,Integer id, String refreshToken, String accessToken, Integer userID, Date accessTokenExpDate, Time accessTokenExpTime, SpotifyApi spotify){
         this.uuid = uuid;
         this.id = id;
         this.refreshToken = refreshToken;
@@ -24,6 +27,7 @@ public class ProcessedCredentials {
         this.userID = userID;
         this.accessTokenExpDate = accessTokenExpDate;
         this.accessTokenExpTime = accessTokenExpTime;
+        this.spotify = spotify;
     }
 
     //getters
@@ -35,7 +39,7 @@ public class ProcessedCredentials {
     public Date getAccessTokenExpDate() { return accessTokenExpDate; }
     public Time getAccessTokenExpTime() { return accessTokenExpTime; }
 
-    public void setAccessToken(Optional<RefreshCredentials> accessToken) throws NoSPApiException {
+    void setAccessToken(Optional<RefreshCredentials> accessToken) throws NoSPApiException {
         if(accessToken.isPresent()){
             RefreshCredentials refresh = accessToken.get();
             this.accessToken = refresh.accessToken;
@@ -47,8 +51,15 @@ public class ProcessedCredentials {
 
     public Boolean isValid(){
         long millis = System.currentTimeMillis();
+        if(millis < this.accessTokenExpDate.getTime()){
+            return true;
+        } else {
+            this.spotify.
+        }
         return millis < this.accessTokenExpDate.getTime();
     }
+
+
 
     //setters
 /*    public void setUuid(UUID uuid) { this.uuid = uuid; }
