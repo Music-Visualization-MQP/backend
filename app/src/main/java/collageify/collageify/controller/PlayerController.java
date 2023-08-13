@@ -1,11 +1,11 @@
 package collageify.collageify.controller;
 
 import collageify.collageify.entities.Player;
+import collageify.collageify.entities.SpotifyUserCredentials;
 import collageify.collageify.service.CollageifyService;
 import collageify.web.exceptions.JSONNotPresent;
 import collageify.web.exceptions.NoSPApiException;
-import collageify.collageify.entities.ProcessedCredentials;
-import com.fasterxml.jackson.core.io.JsonEOFException;
+import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 
 import java.io.IOException;
@@ -23,32 +23,32 @@ public class PlayerController {
     private SpotifyApiController spotify = new SpotifyApiController();
 
 
-    public  Map<UUID, ProcessedCredentials> credentialsMap = Collections.synchronizedMap(new HashMap<>());
-    public Map<UUID, ProcessedCredentials> expiredCredsMap = Collections.synchronizedMap(new HashMap<>());
+    public  Map<UUID, SpotifyUserCredentials> credentialsMap = Collections.synchronizedMap(new HashMap<>());
+    public Map<UUID, SpotifyUserCredentials> expiredCredsMap = Collections.synchronizedMap(new HashMap<>());
     private SqlController sql = new SqlController();
 
 
     public PlayerController() throws NoSPApiException, SQLException {
         executorService = Executors.newFixedThreadPool(100);
-        getCredentials();
+        sql.getAuthCredentials() -
         //System.out.println(this.expiredCredsMap.values().hashCode());
         //System.out.println(this.credentialsMap.values().hashCode());
 
 
     }
-    private void getCredentials() throws SQLException, NoSPApiException {
+    /*private void getCredentials() throws SQLException, NoSPApiException {
         ResultSet resultSet = sql.getAuthCredentials().get();
         System.out.println(resultSet.getMetaData());
 
         while (resultSet.next()) {
-            ProcessedCredentials creds = new ProcessedCredentials(
-                    uuid.generateUUID(),
+            SpotifyUserCredentials creds = new SpotifyUserCredentials(
                     resultSet.getInt("id"),
                     resultSet.getString("refresh_token"),
                     resultSet.getString("access_token"),
                     resultSet.getInt("user_id"),
                     resultSet.getDate("access_token_exp_date"),
                     resultSet.getTime("access_token_exp_time"),
+                    SpotifyApi.builder().build()
             );
 
             System.out.println(resultSet.getTime("access_token_exp_time"));
@@ -56,12 +56,12 @@ public class PlayerController {
 
             this.credentialsMap.put(creds.getUuid(), creds);
             System.out.println(this.credentialsMap.get(creds.getUuid()).getAccessTokenExpDate());
-        }
+        }*/
 
     }
     public void filterExpiredCredentials() {
         Date now = new Date();
-        for (ProcessedCredentials creds : this.credentialsMap.values()) {
+        for (SpotifyUserCredentials creds : this.credentialsMap.values()) {
             if (creds.getAccessTokenExpDate().before(now) ||
                     (creds.getAccessTokenExpDate().equals(now) && creds.getAccessTokenExpTime().before(new Time(now.getTime())))) {
                 System.out.println("invalid creds found");
@@ -74,7 +74,7 @@ public class PlayerController {
 
     public void getNewTokens() throws SQLException, NoSPApiException, IOException, SpotifyWebApiException {
         if(!this.expiredCredsMap.isEmpty()){
-            for (ProcessedCredentials credentials: this.expiredCredsMap.values()){
+            for (SpotifyUserCredentials credentials: this.expiredCredsMap.values()){
                 credentials.setAccessToken(Optional.of(this.spotify.getNewAccessToken(credentials).orElseThrow()));
                 System.out.println("should be updated");
             }
@@ -117,12 +117,12 @@ public class PlayerController {
 
 
     }
-    /*public void run() throws Exception, NoSPApiException, JSONNotPresent {
+/*public void run() throws Exception, NoSPApiException, JSONNotPresent {
         CollageifyService collageify = new CollageifyService();
         init();
         System.out.println("initialized");
 
-        for (ProcessedCredentials credentials : this.credentialsMap.values()) {
+        for (SpotifyUserCredentials credentials : this.credentialsMap.values()) {
             System.out.println("first loop");
             this.players.put(credentials.getUuid(), new Player(this.spotify, credentials));
         }
@@ -134,6 +134,7 @@ public class PlayerController {
             }
         }
     }*/
+
     public void run () throws Exception, NoSPApiException, JSONNotPresent {
         init();
         CollageifyService collageify = new CollageifyService();
@@ -142,7 +143,7 @@ public class PlayerController {
         System.out.println("Initialized");
 
         List<Callable<Void>> playerTasks = new ArrayList<>();
-        for (ProcessedCredentials credentials : this.credentialsMap.values()) {
+        for (SpotifyUserCredentials credentials : this.credentialsMap.values()) {
             playerTasks.add(() -> {
                 System.out.println("First loop");
                 try {

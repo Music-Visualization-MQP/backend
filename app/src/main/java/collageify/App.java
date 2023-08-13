@@ -31,6 +31,8 @@ public class App {
         SpringApplication.run(App.class,args);
         //play.run();
         //play.run();
+        //MusicBrainzClient client = MusicBrainzJerseyClient.createWithDefaults();
+
 
         /*JAXRSServerFactoryBean factoryBean = new JAXRSServerFactoryBean();
         factoryBean.setResourceClasses(TestClass.class);

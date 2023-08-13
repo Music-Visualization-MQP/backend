@@ -1,8 +1,9 @@
 package collageify.collageify.db;
 import java.sql.*;
-import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Optional;
 
+import collageify.collageify.entities.SpotifyUserCredentials;
 import collageify.web.exceptions.NoSPApiException;
 
 public class SQLAccess implements IDBAccess {
@@ -139,7 +140,7 @@ public class SQLAccess implements IDBAccess {
     }
 
     @Override
-    public Optional<ResultSet> getAuthCredentials() throws SQLException, NoSPApiException {
+    public HashMap<Integer, SpotifyUserCredentials> getAuthCredentials() throws SQLException, NoSPApiException {
         return Optional.empty();
     }
 

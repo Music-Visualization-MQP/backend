@@ -3,7 +3,6 @@ import collageify.collageify.controller.SpotifyApiController;
 import collageify.collageify.db.SQLAccess;
 import collageify.web.exceptions.JSONNotPresent;
 import collageify.web.exceptions.NoSPApiException;
-import collageify.collageify.service.CollageifyService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.io.IOException;
@@ -18,7 +17,7 @@ import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 
 
 public class Player implements Runnable {
-    private ProcessedCredentials credentials;
+    private SpotifyUserCredentials credentials;
     private Integer userID;
     private String username;
 
@@ -42,7 +41,7 @@ public class Player implements Runnable {
 
     public SpotifyApiController spotify;
 
-    public Player(SpotifyApiController spotify, ProcessedCredentials credentials) throws NoSPApiException, SQLException {
+    public Player(SpotifyApiController spotify, SpotifyUserCredentials credentials) throws NoSPApiException, SQLException {
         this.credentials = credentials;
         this.spotify = spotify;
         this.userID = this.credentials.getUserID();
