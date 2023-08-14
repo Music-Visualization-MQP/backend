@@ -52,7 +52,7 @@ public class SpotifyUserCredentials {
     public Boolean isValid() {
         long millis = System.currentTimeMillis();
         //do we really want this 5 minute delay or whatever I understand it purpose, but it may prove un nescicary
-        return millis < this.accessTokenExpDate.getTime() - 300 * 1000;
+        return millis > this.accessTokenExpDate.getTime() - 300 * 1000;
         //return millis < this.accessTokenExpDate.getTime(); this should be somewhere else
     }
 
