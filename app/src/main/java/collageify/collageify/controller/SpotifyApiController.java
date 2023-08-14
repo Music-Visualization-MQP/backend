@@ -69,7 +69,7 @@ public class SpotifyApiController {
         }else throw new NoSPApiException("opps");*/
 
     }
-    public Optional<RefreshCredentials> getNewAccessToken(SpotifyUserCredentials credentials) throws IOException, SpotifyWebApiException{
+    public Optional<SpotifyUserCredentials> getNewAccessToken(SpotifyUserCredentials credentials) throws IOException, SpotifyWebApiException{
         AuthorizationCodeRefreshRequest request = SpotifyApi.builder()
                 .setClientId(clientId)
                 .setClientSecret(clientSecret)
@@ -78,7 +78,7 @@ public class SpotifyApiController {
         try{
             AuthorizationCodeCredentials refreshCredentials = request.execute();
             long millis = Instant.now().toEpochMilli() + (refreshCredentials.getExpiresIn() * 1000);
-            return Optional.of(new RefreshCredentials(refreshCredentials.getAccessToken(), new Date(millis), new Time(millis))) ;
+            return Optional.of(new SpotifyUserCredentials(credentials.getId(), credentials.getRefreshToken(), refreshCredentials.getAccessToken(), credentials.getUserId(), new Date(millis), new Time(millis))) ;
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }

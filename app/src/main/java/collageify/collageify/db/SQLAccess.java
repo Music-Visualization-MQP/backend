@@ -1,6 +1,6 @@
 package collageify.collageify.db;
 import java.sql.*;
-import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Optional;
 
 import collageify.collageify.entities.SpotifyUserCredentials;
@@ -14,7 +14,7 @@ public class SQLAccess implements IDBAccess {
 
     // You need to close the resultSet
 
-    /**
+  /**
      * @throws SQLException
      * This is for side effect only
      *
@@ -22,6 +22,7 @@ public class SQLAccess implements IDBAccess {
      * database if any of the values are not null they are closed using
      * the close function definied by their classes
      */
+
     protected void close() {
         try {
             if (resultSet != null) {
@@ -40,13 +41,14 @@ public class SQLAccess implements IDBAccess {
         }
     }
 
-    /**
+/**
      *
      * @throws SQLException
      * This method is for side effect only
      *
      * Its side effect is to conect to the database by changing the state of the connect variable
      */
+
     @Override
     public void estConnection() throws SQLException {
         try {
@@ -140,17 +142,18 @@ public class SQLAccess implements IDBAccess {
     }
 
     @Override
-    public HashMap<Integer, SpotifyUserCredentials> getAuthCredentials() throws SQLException, NoSPApiException {
-        return Optional.empty();
+    public LinkedList<SpotifyUserCredentials> getAuthCredentials() throws SQLException, NoSPApiException {
+        return new LinkedList<>();
     }
 
-    /**
+/**
      *
      * @param email The method consumes a string represent the email of the user who's...
      *             spotify information is being looked up, eventually username should also work
      * @return This method produces a
      * @throws SQLException
-     */
+*/
+
 
     public Optional<Integer> getUserIdByEmail(String email) throws SQLException {
         try {

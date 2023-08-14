@@ -13,6 +13,9 @@ import java.util.Map;
 
 public class SqlController  {
     private Connection connect = null;
+    private Statement statement = null;
+    private ResultSet resultSet = null;
+
     SqlController(){
     }
     public void estConnection() throws SQLException {
@@ -69,6 +72,24 @@ public class SqlController  {
         }
 
 
+    }
+    protected void close() {
+        try {
+
+            if (resultSet != null) {
+                resultSet.close();
+            }
+
+            if (statement != null) {
+                statement.close();
+            }
+
+            if (connect != null) {
+                connect.close();
+            }
+        } catch (Exception e) {
+
+        }
     }
 
 }

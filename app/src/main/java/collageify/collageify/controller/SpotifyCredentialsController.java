@@ -7,16 +7,37 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 public class SpotifyCredentialsController {
     private SqlController sql = new SqlController();
-    public Map<Integer, SpotifyUserCredentials> credentialsMap = Collections.synchronizedMap(new HashMap<>());
-    public Map<Integer, SpotifyUserCredentials> expiredCredsMap = Collections.synchronizedMap(new HashMap<>());
+    private Map<Integer, SpotifyUserCredentials> credentialsMap = Collections.synchronizedMap(new HashMap<>());
+    private Map<Integer, SpotifyUserCredentials> tmpCredentialsMap = Collections.synchronizedMap(new HashMap<>());
 
     public SpotifyCredentialsController() throws SQLException, NoSPApiException {
-        credentialsMap = sql.getAuthCredentials();
+        tmpCredentialsMap = sql.getAuthCredentials();
+    }
+    private void init(){
+        synchronized (this){
+            for(Integer i : tmpCredentialsMap.keySet()){
+                if(!tmpCredentialsMap.get(i).isValid()){
+
+                }
+            }
+
+        }
+
+
+
+
     }
 
-    private
+
+    public void test() {
+        System.out.println(credentialsMap.keySet());
+        for(Integer I : credentialsMap.keySet()){
+            System.out.println(credentialsMap.get(I).getAccessTokenExpDate());
+        }
+    }
+
+
 }

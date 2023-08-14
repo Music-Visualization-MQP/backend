@@ -5,10 +5,12 @@ package collageify;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import collageify.collageify.controller.
 
 class AppTest {
-    @Test void appHasAGreeting() {
-        assertTrue(true);
+    @Test void sqlConnection() {
+        assertTrue();
+
         
     }
 }

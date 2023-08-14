@@ -44,7 +44,7 @@ public class Player implements Runnable {
     public Player(SpotifyApiController spotify, SpotifyUserCredentials credentials) throws NoSPApiException, SQLException {
         this.credentials = credentials;
         this.spotify = spotify;
-        this.userID = this.credentials.getUserID();
+        this.userID = this.credentials.getUserId();
     }
 
    /* private void addInfo(Integer userID, String username, Integer progressMS, String spURI, String artistName, String albumName, String trackName, Integer popularity, Integer durationMS) throws NoSPApiException {
@@ -183,7 +183,7 @@ public class Player implements Runnable {
                 if(credentials.getAccessTokenExpTime().getTime()
                         - (5*60*1000) < System.currentTimeMillis()){
                     System.out.println("token expiring soon");
-                    credentials.setAccessToken(Optional.of(this.spotify.getNewAccessToken(credentials).orElseThrow()));
+                    //credentials.setAccessToken(Optional.of(this.spotify.getNewAccessToken(credentials).orElseThrow()));
                     System.out.println("token updated!");
                 } if (requestData.isPresent() && requestDataHistorical.isEmpty()) {
                     System.out.println(requestData.get());

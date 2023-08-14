@@ -1,3 +1,4 @@
+/*
 package collageify.collageify.controller;
 
 import collageify.collageify.entities.Player;
@@ -36,7 +37,8 @@ public class PlayerController {
 
 
     }
-    /*private void getCredentials() throws SQLException, NoSPApiException {
+    */
+/*private void getCredentials() throws SQLException, NoSPApiException {
         ResultSet resultSet = sql.getAuthCredentials().get();
         System.out.println(resultSet.getMetaData());
 
@@ -56,7 +58,8 @@ public class PlayerController {
 
             this.credentialsMap.put(creds.getUuid(), creds);
             System.out.println(this.credentialsMap.get(creds.getUuid()).getAccessTokenExpDate());
-        }*/
+        }*//*
+
 
     }
     public void filterExpiredCredentials() {
@@ -117,6 +120,7 @@ public class PlayerController {
 
 
     }
+*/
 /*public void run() throws Exception, NoSPApiException, JSONNotPresent {
         CollageifyService collageify = new CollageifyService();
         init();
@@ -133,7 +137,8 @@ public class PlayerController {
                 player.run();
             }
         }
-    }*/
+    }*//*
+
 
     public void run () throws Exception, NoSPApiException, JSONNotPresent {
         init();
@@ -171,3 +176,4 @@ public class PlayerController {
         }
     }
 }
+*/

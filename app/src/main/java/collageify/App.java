@@ -1,6 +1,6 @@
 package collageify;
 
-import collageify.collageify.controller.PlayerController;
+import collageify.collageify.controller.SpotifyCredentialsController;
 import collageify.web.exceptions.JSONNotPresent;
 import collageify.web.exceptions.NoSPApiException;
 import org.springframework.boot.SpringApplication;
@@ -45,6 +45,8 @@ public class App {
 
         factoryBean.create();
         System.out.println("Server started at http://localhost:80/");*/
+        SpotifyCredentialsController spc = new SpotifyCredentialsController();
+        spc.test();
 
     }
 
