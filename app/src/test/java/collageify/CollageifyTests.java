@@ -4,7 +4,6 @@
 package collageify;
 
 import collageify.collageify.controller.SpotifyCredentialsController;
-import collageify.collageify.controller.SqlController;
 import collageify.collageify.entities.SpotifyUserCredentials;
 import collageify.web.exceptions.NoSPApiException;
 import org.junit.jupiter.api.Test;
@@ -16,20 +15,19 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Time;
 
-class AppTest {
+class CollageifyTests {
     public SpotifyCredentialsController spotify;
 
     long millis;
-    public SpotifyUserCredentials credentials;
+    public SpotifyUserCredentials testCredentials;
 
-    AppTest() throws SQLException, NoSPApiException, IOException, SpotifyWebApiException {
+    CollageifyTests() throws SQLException, NoSPApiException, IOException, SpotifyWebApiException {
         millis = System.currentTimeMillis();
-        credentials = new SpotifyUserCredentials(222, "abc", "def", 222, new Date(millis), new Time(millis));
-
+        testCredentials = new SpotifyUserCredentials(222, "abc", "def", 222, new Date(millis), new Time(millis));
     }
     public
     @Test void testIsTokenValidate(){
-        assertTrue(credentials.isValid());
+        assertTrue(testCredentials.isValid());
     }
     public
     @Test void testGrabKeysandValidate() throws SQLException, NoSPApiException, IOException, SpotifyWebApiException {

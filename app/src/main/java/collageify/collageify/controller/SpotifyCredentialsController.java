@@ -11,6 +11,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class SpotifyCredentialsController {
+
     private SqlController sql = new SqlController();
     private SpotifyCredentialManager spotify = new SpotifyCredentialManager();
     private Map<Integer, SpotifyUserCredentials> credentialsMap = Collections.synchronizedMap(new HashMap<>());
@@ -57,11 +58,15 @@ public class SpotifyCredentialsController {
             System.out.println(credentialsMap.get(I).getAccessTokenExpDate());
         }
     }
+
+    /**
+     *
+     * @return size of the active credentials map
+     */
     public int keysInSet(){
         return this.credentialsMap.keySet().size();
     }
     public boolean areKeysValid(){
-
         for(Integer i : this.credentialsMap.keySet()){
             if(!this.credentialsMap.get(i).isValid()){
                 return false;
@@ -69,6 +74,8 @@ public class SpotifyCredentialsController {
         }
         return true;
     }
+
+
 
 
 }

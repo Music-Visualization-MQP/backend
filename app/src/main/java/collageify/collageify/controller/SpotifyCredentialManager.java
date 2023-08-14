@@ -7,13 +7,17 @@ import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.credentials.AuthorizationCodeCredentials;
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeRefreshRequest;
 
+import com.google.common.util.concurrent.AbstractScheduledService;
+
+
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.Time;
 import java.time.Instant;
 import java.util.Optional;
+import java.util.TimerTask;
 
-public class SpotifyCredentialManager implements ISpotifyCredentialManagementStrategy{
+public class SpotifyCredentialManager extends TimerTask implements ISpotifyCredentialManagementStrategy {
     private static final String clientId = System.getenv("SP_CID");
     private static final String clientSecret = System.getenv("SP_S");
     @Override
@@ -30,5 +34,10 @@ public class SpotifyCredentialManager implements ISpotifyCredentialManagementStr
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void run() {
+
     }
 }
