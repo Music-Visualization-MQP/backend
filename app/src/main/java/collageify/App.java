@@ -1,6 +1,6 @@
 package collageify;
 
-import collageify.collageify.controller.SpotifyCredentialsController;
+import collageify.collageify.controller.spotify.SpotifyCredentialsController;
 import collageify.web.exceptions.JSONNotPresent;
 import collageify.web.exceptions.NoSPApiException;
 import org.springframework.boot.SpringApplication;

@@ -1,5 +1,6 @@
-package collageify.collageify.controller;
+package collageify.collageify.controller.spotify;
 
+import collageify.collageify.controller.ISpotifyCredentialManagementStrategy;
 import collageify.collageify.entities.SpotifyUserCredentials;
 import org.apache.hc.core5.http.ParseException;
 import se.michaelthelin.spotify.SpotifyApi;
@@ -17,7 +18,7 @@ import java.time.Instant;
 import java.util.Optional;
 import java.util.TimerTask;
 
-public class SpotifyCredentialManager extends TimerTask implements ISpotifyCredentialManagementStrategy {
+public class SpotifyCredentialManager implements ISpotifyCredentialManagementStrategy {
     private static final String clientId = System.getenv("SP_CID");
     private static final String clientSecret = System.getenv("SP_S");
     @Override
@@ -35,9 +36,9 @@ public class SpotifyCredentialManager extends TimerTask implements ISpotifyCrede
             throw new RuntimeException(e);
         }
     }
+    private void delayedRefresh()
 
-    @Override
-    public void run() {
+    public static void main(String[] args) {
 
     }
 }

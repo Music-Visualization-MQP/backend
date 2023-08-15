@@ -3,7 +3,7 @@
  */
 package collageify;
 
-import collageify.collageify.controller.SpotifyCredentialsController;
+import collageify.collageify.controller.spotify.SpotifyCredentialsController;
 import collageify.collageify.entities.SpotifyUserCredentials;
 import collageify.web.exceptions.NoSPApiException;
 import org.junit.jupiter.api.Test;
@@ -35,4 +35,5 @@ class CollageifyTests {
         assertEquals(spotify.keysInSet(),3);
         assertTrue(spotify.areKeysValid());
     }
+
 }

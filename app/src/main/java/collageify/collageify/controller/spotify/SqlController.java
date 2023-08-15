@@ -1,4 +1,4 @@
-package collageify.collageify.controller;
+package collageify.collageify.controller.spotify;
 
 import collageify.collageify.db.IDBAccess;
 import collageify.collageify.db.SQLAccess;

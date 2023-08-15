@@ -1,8 +1,7 @@
-package collageify.collageify.controller;
+package collageify.collageify.controller.spotify;
 
 import collageify.collageify.entities.SpotifyUserCredentials;
 import collageify.web.exceptions.NoSPApiException;
-import org.eclipse.jetty.util.security.Credential;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 
 import java.io.IOException;
@@ -73,6 +72,15 @@ public class SpotifyCredentialsController {
             }
         }
         return true;
+    }
+    void updateSpotifyCredentials(SpotifyUserCredentials credentials){
+        Integer id = credentials.getId();
+        if(this.credentialsMap.containsKey(id)){
+            this.credentialsMap.remove(id);
+            this.credentialsMap.put(id, credentials);
+        } else {
+            credentialsMap.put(id, credentials);
+        }
     }
 
 
