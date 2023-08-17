@@ -63,7 +63,6 @@ public class AuthController {
                 loginDto.getUsernameOrEmail(), loginDto.getPassword());
         Authentication auth = authMgr.authenticate(token);
         if(auth.isAuthenticated()){
-
             return new ResponseEntity<>(jwtService.generateToken(loginDto.getUsernameOrEmail()), HttpStatus.OK);
         } else {
             return new ResponseEntity<>("bad request", HttpStatus.BAD_REQUEST);
@@ -105,7 +104,6 @@ public class AuthController {
     private String extractToken(String authorizationHeader) {
         // Split the Authorization header value to extract the token
         String[] parts = authorizationHeader.split("\\s+");
-
         if (parts.length == 2 && parts[0].equalsIgnoreCase("Bearer")) {
             return parts[1];
         } else {

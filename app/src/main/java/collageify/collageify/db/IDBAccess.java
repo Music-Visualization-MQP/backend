@@ -1,6 +1,6 @@
 package collageify.collageify.db;
 
-import collageify.collageify.entities.SpotifyUserCredentials;
+import collageify.collageify.entities.SpotifyClientCredentials;
 import collageify.web.exceptions.NoSPApiException;
 
 import java.sql.SQLException;
@@ -12,5 +12,5 @@ public interface IDBAccess {
     public void addSpotifyCredentials(String email, String accessToken, String refreshToken, long accessTokenExp) throws SQLException;
     public void getTrackPlayedUser();
     public void getTrackPlayedPublic();
-    public LinkedList<SpotifyUserCredentials> getAuthCredentials() throws SQLException, NoSPApiException;
+    public LinkedList<SpotifyClientCredentials> getAuthCredentials() throws SQLException, NoSPApiException;
 }

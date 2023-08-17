@@ -1,6 +1,6 @@
 package collageify.collageify.controller.spotify;
 
-import collageify.collageify.entities.SpotifyUserCredentials;
+import collageify.collageify.entities.SpotifyClientCredentials;
 import collageify.web.exceptions.NoSPApiException;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 
@@ -13,9 +13,9 @@ public class SpotifyCredentialsController {
 
     private SqlController sql = new SqlController();
     private SpotifyCredentialManager spotify = new SpotifyCredentialManager();
-    private Map<Integer, SpotifyUserCredentials> credentialsMap = Collections.synchronizedMap(new HashMap<>());
-    private Map<Integer, SpotifyUserCredentials> tmpCredentialsMap = Collections.synchronizedMap(new HashMap<>());
-    private Queue<SpotifyUserCredentials> tokenRefreshQueue = new ConcurrentLinkedQueue<>();
+    private Map<Integer, SpotifyClientCredentials> credentialsMap = Collections.synchronizedMap(new HashMap<>());
+    private Map<Integer, SpotifyClientCredentials> tmpCredentialsMap = Collections.synchronizedMap(new HashMap<>());
+    private Queue<SpotifyClientCredentials> tokenRefreshQueue = new ConcurrentLinkedQueue<>();
     public SpotifyCredentialsController() throws SQLException, NoSPApiException, IOException, SpotifyWebApiException {
         tmpCredentialsMap = this.sql.getAuthCredentials();
         initCredentialMap();
@@ -26,7 +26,7 @@ public class SpotifyCredentialsController {
                 if (this.tmpCredentialsMap.get(i).isValid()) {
                     this.credentialsMap.put(i, this.tmpCredentialsMap.get(i));
                 } else {
-                    Optional<SpotifyUserCredentials> refreshedCredentials = spotify.getNewAccessToken(tmpCredentialsMap.get(i));
+                    Optional<SpotifyClientCredentials> refreshedCredentials = spotify.getNewAccessToken(tmpCredentialsMap.get(i));
                     refreshedCredentials.ifPresent(credentials -> {
                         if (credentials.isValid()) {
                             this.credentialsMap.put(i, credentials);
@@ -73,7 +73,7 @@ public class SpotifyCredentialsController {
         }
         return true;
     }
-    void updateSpotifyCredentials(SpotifyUserCredentials credentials){
+    void updateSpotifyCredentials(SpotifyClientCredentials credentials){
         Integer id = credentials.getId();
         if(this.credentialsMap.containsKey(id)){
             this.credentialsMap.remove(id);

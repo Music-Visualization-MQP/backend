@@ -1,7 +1,6 @@
 package collageify.collageify.controller;
-import collageify.collageify.entities.SpotifyUserCredentials;
+import collageify.collageify.entities.SpotifyClientCredentials;
 import collageify.web.exceptions.NoSPApiException;
-import collageify.collageify.entities.RefreshCredentials;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.credentials.AuthorizationCodeCredentials;
@@ -20,10 +19,10 @@ public class SpotifyApiController {
 
     //private final Integer id;
     private final Optional<SpotifyApi> spotifyApi = Optional.empty();
-    private SpotifyUserCredentials credentials;
+    private SpotifyClientCredentials credentials;
 
     /**
-     * This is the constructor, and thus it is side effect only, it consumes a SpotifyUserCredentials object,
+     * This is the constructor, and thus it is side effect only, it consumes a SpotifyClientCredentials object,
      * and stores it in a private field
      *
      * @throws NoSPApiException catch all for issues related to the spotify api
@@ -31,13 +30,13 @@ public class SpotifyApiController {
      */
     public SpotifyApiController(){
     }
-    /*public SpotifyApiController(SpotifyUserCredentials credentials) throws NoSPApiException, SQLException{
+    /*public SpotifyApiController(SpotifyClientCredentials credentials) throws NoSPApiException, SQLException{
         this.credentials = credentials;
         //this.spotifyApi = spotifyApi(accessToken, refreshToken);
     }*/
     private static final String clientId = System.getenv("SP_CID");
     private static final String clientSecret = System.getenv("SP_S");
-    private Optional<SpotifyApi> spotifyApi(Optional<SpotifyUserCredentials> credentials) throws NoSPApiException {
+    private Optional<SpotifyApi> spotifyApi(Optional<SpotifyClientCredentials> credentials) throws NoSPApiException {
         final Optional<SpotifyApi> returnVal;
         if(credentials.isPresent()){
             returnVal = Optional.of(new SpotifyApi.Builder()
@@ -56,7 +55,7 @@ public class SpotifyApiController {
             return this.spotifyApi.get();
         } else throw new NoSPApiException("invalid spotify api");
     }
-    public Optional<String> requestData(SpotifyUserCredentials credentials) throws NoSPApiException, IOException, ParseException, SpotifyWebApiException {
+    public Optional<String> requestData(SpotifyClientCredentials credentials) throws NoSPApiException, IOException, ParseException, SpotifyWebApiException {
         final Optional<SpotifyApi> api =  spotifyApi(Optional.of(credentials));
         final Optional<GetUsersCurrentlyPlayingTrackRequest> request = Optional.of(api.get().getUsersCurrentlyPlayingTrack().build());
 
@@ -69,7 +68,7 @@ public class SpotifyApiController {
         }else throw new NoSPApiException("opps");*/
 
     }
-    public Optional<SpotifyUserCredentials> getNewAccessToken(SpotifyUserCredentials credentials) throws IOException, SpotifyWebApiException{
+    public Optional<SpotifyClientCredentials> getNewAccessToken(SpotifyClientCredentials credentials) throws IOException, SpotifyWebApiException{
         AuthorizationCodeRefreshRequest request = SpotifyApi.builder()
                 .setClientId(clientId)
                 .setClientSecret(clientSecret)
@@ -78,7 +77,7 @@ public class SpotifyApiController {
         try{
             AuthorizationCodeCredentials refreshCredentials = request.execute();
             long millis = Instant.now().toEpochMilli() + (refreshCredentials.getExpiresIn() * 1000);
-            return Optional.of(new SpotifyUserCredentials(credentials.getId(), credentials.getRefreshToken(), refreshCredentials.getAccessToken(), credentials.getUserId(), new Date(millis), new Time(millis))) ;
+            return Optional.of(new SpotifyClientCredentials(credentials.getId(), credentials.getRefreshToken(), refreshCredentials.getAccessToken(), credentials.getUserId(), new Date(millis), new Time(millis))) ;
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }

@@ -17,7 +17,7 @@ import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 
 
 public class Player implements Runnable {
-    private SpotifyUserCredentials credentials;
+    private SpotifyClientCredentials credentials;
     private Integer userID;
     private String username;
 
@@ -41,7 +41,7 @@ public class Player implements Runnable {
 
     public SpotifyApiController spotify;
 
-    public Player(SpotifyApiController spotify, SpotifyUserCredentials credentials) throws NoSPApiException, SQLException {
+    public Player(SpotifyApiController spotify, SpotifyClientCredentials credentials) throws NoSPApiException, SQLException {
         this.credentials = credentials;
         this.spotify = spotify;
         this.userID = this.credentials.getUserId();
@@ -107,6 +107,14 @@ public class Player implements Runnable {
             }
         }
     }
+
+    /**
+     *
+     * @param response
+     * @return
+     * @throws JsonProcessingException
+     * @throws JSONNotPresent
+     */
 
     private Optional<JsonNode>  responseToJson(Optional<String> response) throws JsonProcessingException, JSONNotPresent {
         if(response.isPresent()){

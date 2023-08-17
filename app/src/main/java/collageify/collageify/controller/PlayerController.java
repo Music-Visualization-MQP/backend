@@ -2,7 +2,7 @@
 package collageify.collageify.controller;
 
 import collageify.collageify.entities.Player;
-import collageify.collageify.entities.SpotifyUserCredentials;
+import collageify.collageify.entities.SpotifyClientCredentials;
 import collageify.collageify.service.CollageifyService;
 import collageify.web.exceptions.JSONNotPresent;
 import collageify.web.exceptions.NoSPApiException;
@@ -24,8 +24,8 @@ public class PlayerController {
     private SpotifyApiController spotify = new SpotifyApiController();
 
 
-    public  Map<UUID, SpotifyUserCredentials> credentialsMap = Collections.synchronizedMap(new HashMap<>());
-    public Map<UUID, SpotifyUserCredentials> expiredCredsMap = Collections.synchronizedMap(new HashMap<>());
+    public  Map<UUID, SpotifyClientCredentials> credentialsMap = Collections.synchronizedMap(new HashMap<>());
+    public Map<UUID, SpotifyClientCredentials> expiredCredsMap = Collections.synchronizedMap(new HashMap<>());
     private SqlController sql = new SqlController();
 
 
@@ -43,7 +43,7 @@ public class PlayerController {
         System.out.println(resultSet.getMetaData());
 
         while (resultSet.next()) {
-            SpotifyUserCredentials creds = new SpotifyUserCredentials(
+            SpotifyClientCredentials creds = new SpotifyClientCredentials(
                     resultSet.getInt("id"),
                     resultSet.getString("refresh_token"),
                     resultSet.getString("access_token"),
@@ -64,7 +64,7 @@ public class PlayerController {
     }
     public void filterExpiredCredentials() {
         Date now = new Date();
-        for (SpotifyUserCredentials creds : this.credentialsMap.values()) {
+        for (SpotifyClientCredentials creds : this.credentialsMap.values()) {
             if (creds.getAccessTokenExpDate().before(now) ||
                     (creds.getAccessTokenExpDate().equals(now) && creds.getAccessTokenExpTime().before(new Time(now.getTime())))) {
                 System.out.println("invalid creds found");
@@ -77,7 +77,7 @@ public class PlayerController {
 
     public void getNewTokens() throws SQLException, NoSPApiException, IOException, SpotifyWebApiException {
         if(!this.expiredCredsMap.isEmpty()){
-            for (SpotifyUserCredentials credentials: this.expiredCredsMap.values()){
+            for (SpotifyClientCredentials credentials: this.expiredCredsMap.values()){
                 credentials.setAccessToken(Optional.of(this.spotify.getNewAccessToken(credentials).orElseThrow()));
                 System.out.println("should be updated");
             }
@@ -126,7 +126,7 @@ public class PlayerController {
         init();
         System.out.println("initialized");
 
-        for (SpotifyUserCredentials credentials : this.credentialsMap.values()) {
+        for (SpotifyClientCredentials credentials : this.credentialsMap.values()) {
             System.out.println("first loop");
             this.players.put(credentials.getUuid(), new Player(this.spotify, credentials));
         }
@@ -148,7 +148,7 @@ public class PlayerController {
         System.out.println("Initialized");
 
         List<Callable<Void>> playerTasks = new ArrayList<>();
-        for (SpotifyUserCredentials credentials : this.credentialsMap.values()) {
+        for (SpotifyClientCredentials credentials : this.credentialsMap.values()) {
             playerTasks.add(() -> {
                 System.out.println("First loop");
                 try {

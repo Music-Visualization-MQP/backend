@@ -2,10 +2,9 @@ package collageify.collageify.entities;
 
 import java.sql.Date;
 import java.sql.Time;
-import java.util.UUID;
 
 
-public class SpotifyUserCredentials {
+public class SpotifyClientCredentials implements ISpotifyUserCredentials {
     final private Integer id;
     final private String refreshToken;
     final private String accessToken;
@@ -22,7 +21,7 @@ public class SpotifyUserCredentials {
      * @param accessTokenExpDate sql date object representing the date at which the token expires
      * @param accessTokenExpTime sql time object representing the time at which the token will expire
      */
-    public SpotifyUserCredentials(Integer id, String refreshToken, String accessToken, Integer userID, Date accessTokenExpDate, Time accessTokenExpTime){
+    public SpotifyClientCredentials(Integer id, String refreshToken, String accessToken, Integer userID, Date accessTokenExpDate, Time accessTokenExpTime){
         this.id = id;
         this.refreshToken = refreshToken;
         this.accessToken = accessToken;
@@ -32,23 +31,29 @@ public class SpotifyUserCredentials {
     }
 
     //getters
+    @Override
     public Integer getId() { return id; }
+    @Override
     public String getRefreshToken() { return refreshToken; }
+    @Override
     public String getAccessToken() { return accessToken; }
+    @Override
     public Integer getUserId() { return userID; }
+    @Override
     public Date getAccessTokenExpDate() { return accessTokenExpDate; }
+    @Override
     public Time getAccessTokenExpTime() { return accessTokenExpTime; }
 
-    /*public void setAccessToken(Optional<RefreshCredentials> accessToken) throws NoSPApiException {
+    /*public void setAccessToken(Optional<SpotifyRefreshCredentials> accessToken) throws NoSPApiException {
         if(accessToken.isPresent()){
-            RefreshCredentials refresh = accessToken.get();
+            SpotifyRefreshCredentials refresh = accessToken.get();
             this.accessToken = refresh.accessToken;
             this.accessTokenExpDate = refresh.accessTokenExpDate;
             this.accessTokenExpTime = refresh.accessTokenExpTime;
 
         }else throw new NoSPApiException("set access token fault");
     }*/
-
+    @Override
     public Boolean isValid() {
         long millis = System.currentTimeMillis();
         //do we really want this 5 minute delay or whatever I understand it purpose, but it may prove un nescicary

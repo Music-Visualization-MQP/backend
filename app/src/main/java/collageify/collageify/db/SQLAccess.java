@@ -3,7 +3,7 @@ import java.sql.*;
 import java.util.LinkedList;
 import java.util.Optional;
 
-import collageify.collageify.entities.SpotifyUserCredentials;
+import collageify.collageify.entities.SpotifyClientCredentials;
 import collageify.web.exceptions.NoSPApiException;
 
 public class SQLAccess implements IDBAccess {
@@ -142,7 +142,7 @@ public class SQLAccess implements IDBAccess {
     }
 
     @Override
-    public LinkedList<SpotifyUserCredentials> getAuthCredentials() throws SQLException, NoSPApiException {
+    public LinkedList<SpotifyClientCredentials> getAuthCredentials() throws SQLException, NoSPApiException {
         return new LinkedList<>();
     }
 
