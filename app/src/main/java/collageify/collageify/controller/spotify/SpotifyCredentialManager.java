@@ -33,7 +33,9 @@ public class SpotifyCredentialManager implements ISpotifyCredentialManagementStr
             throw new RuntimeException(e);
         }
     }
-    private void delayedRefresh()
+    private void delayedRefresh(){
+
+    }
 
     public static void main(String[] args) {
 

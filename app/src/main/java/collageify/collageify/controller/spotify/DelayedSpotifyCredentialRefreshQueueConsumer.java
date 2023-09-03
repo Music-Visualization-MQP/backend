@@ -14,7 +14,7 @@ public class DelayedSpotifyCredentialRefreshQueueConsumer implements Runnable {
     public void run() {
         try {
             DelayedSpotifyCredentialRefreshObject credentialRefreshObject = queue.take();
-            credentialRefreshObject.
+            //credentialRefreshObject.
             numberOfConsumedElements.incrementAndGet();
             System.out.println("Consumer take: " + credentialRefreshObject);
         } catch (InterruptedException e) {
