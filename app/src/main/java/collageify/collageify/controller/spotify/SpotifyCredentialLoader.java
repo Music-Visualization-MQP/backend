@@ -8,14 +8,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SqlController  {
+public class SpotifyCredentialLoader {
     private Connection connect = null;
     private Statement statement = null;
     private ResultSet resultSet = null;
 
-    SqlController(){
+    SpotifyCredentialLoader(){
     }
-    public void estConnection() throws SQLException {
+    private void estConnection() throws SQLException {
         try {
             // This will load the MySQL driver, each DB has its own driver
             // Setup the connection with the DB
@@ -26,7 +26,17 @@ public class SqlController  {
             throw e;
         }
     }
-    //this is like optional hell
+
+    /**
+     *
+     *  Side Effect: This method establishes a database connection ond once the credentials are placed in the map..
+     *  the connection is terminated with the close() method
+     * @return This method produces a synchronized map of all spotify client credentials that exist inside the database
+     *
+     * TODO: Do something when there are non, perhaps log something
+     * @throws SQLException
+     * @throws NoSPApiException
+     */
     public Map<Integer, SpotifyClientCredentials> getAuthCredentials() throws SQLException, NoSPApiException {
         estConnection();
         Map<Integer, SpotifyClientCredentials> credentialsMap = Collections.synchronizedMap(new HashMap<>());
@@ -47,6 +57,7 @@ public class SqlController  {
 
                 credentialsMap.put(id, credentials);
             }
+            close();
 
             return  credentialsMap;
             /*if(resultSet.next()){
@@ -64,12 +75,14 @@ public class SqlController  {
 
         } catch(Exception e) {
             throw e;
-        } finally {
-            close();
         }
 
 
     }
+
+    /**
+     * This funtion is side effect only and it closes out any data base conenction
+     */
     protected void close() {
         try {
 

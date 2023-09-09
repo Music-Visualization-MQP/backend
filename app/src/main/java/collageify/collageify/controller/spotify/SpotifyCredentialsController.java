@@ -11,8 +11,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class SpotifyCredentialsController {
 
-    private SqlController sql = new SqlController();
-    private SpotifyCredentialManager spotify = new SpotifyCredentialManager();
+    private SpotifyCredentialLoader sql = new SpotifyCredentialLoader();
+    private SpotifyCredentialRefresher spotify = new SpotifyCredentialRefresher();
     private Map<Integer, SpotifyClientCredentials> credentialsMap = Collections.synchronizedMap(new HashMap<>());
     private Map<Integer, SpotifyClientCredentials> tmpCredentialsMap = Collections.synchronizedMap(new HashMap<>());
     private Queue<SpotifyClientCredentials> tokenRefreshQueue = new ConcurrentLinkedQueue<>();

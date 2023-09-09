@@ -15,7 +15,7 @@ import java.sql.Time;
 import java.time.Instant;
 import java.util.Optional;
 
-public class SpotifyCredentialManager implements ISpotifyCredentialManagementStrategy {
+public class SpotifyCredentialRefresher implements ISpotifyCredentialManagementStrategy {
     private static final String clientId = System.getenv("SP_CID");
     private static final String clientSecret = System.getenv("SP_S");
     @Override
@@ -37,7 +37,4 @@ public class SpotifyCredentialManager implements ISpotifyCredentialManagementStr
 
     }
 
-    public static void main(String[] args) {
-
-    }
 }

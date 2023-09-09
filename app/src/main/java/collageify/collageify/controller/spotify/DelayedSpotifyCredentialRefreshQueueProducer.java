@@ -1,4 +1,4 @@
-/*
+
 package collageify.collageify.controller.spotify;
 
 import java.util.concurrent.BlockingQueue;
@@ -8,10 +8,19 @@ public class DelayedSpotifyCredentialRefreshQueueProducer implements Runnable {
     private Integer numberOfElementsToProduce;
     private Integer delayOfEachProducedMessageMilliseconds;
 
+    /**
+     * TODO: Consider design more, this might do better taking in a strategy.
+     *
+     * passing a strategy in the constructor in might be advantageous because...
+     * the data could come froo
+     *
+     * @param q represents a BlockingQueue representing Spotify refresh object
+     */
     // standard constructor
     DelayedSpotifyCredentialRefreshQueueProducer(BlockingQueue<DelayedSpotifyCredentialRefreshObject> q){
         this.queue = q;
         numberOfElementsToProduce = q.size();
+        run();
     }
 
 
@@ -30,4 +39,4 @@ public class DelayedSpotifyCredentialRefreshQueueProducer implements Runnable {
         }
     }
 }
-*/
+
