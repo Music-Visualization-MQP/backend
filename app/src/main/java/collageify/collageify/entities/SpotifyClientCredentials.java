@@ -7,10 +7,11 @@ import java.sql.Time;
 public class SpotifyClientCredentials implements ISpotifyUserCredentials {
     final private Integer id;
     final private String refreshToken;
-    final private String accessToken;
+    private String accessToken;
     final private Integer userID;
     final private Date accessTokenExpDate;
     final private Time accessTokenExpTime;
+    private SpotifyClientCredentialManagementStrategy strategy;
 
     /**
      *
@@ -28,9 +29,17 @@ public class SpotifyClientCredentials implements ISpotifyUserCredentials {
         this.userID = userID;
         this.accessTokenExpDate = accessTokenExpDate;
         this.accessTokenExpTime = accessTokenExpTime;
+        if(isValid()){
+            this.strategy = new SpotifyClientCredentialGathererStrategy();
+        } else {
+            this.strategy = new SpotifyClientCredentialRefresherStrategy();
+            this.strategy.action();
+        }
     }
 
     //getters
+
+
     @Override
     public Integer getId() { return id; }
     @Override
@@ -60,6 +69,8 @@ public class SpotifyClientCredentials implements ISpotifyUserCredentials {
         return millis > this.accessTokenExpDate.getTime() - 300 * 1000;
         //return millis < this.accessTokenExpDate.getTime(); this should be somewhere else
     }
+
+
 
 
 
