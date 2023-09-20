@@ -1,6 +1,8 @@
 package collageify.collageify.entities;
 
-public interface SpotifyClientCredentialManagementStrategy<T extends SpotifyClientCredentials> {
+import collageify.collageify.controller.SpotifyApiController;
+
+public interface SpotifyClientCredentialManagementStrategy {
 
 
     /**
@@ -9,7 +11,5 @@ public interface SpotifyClientCredentialManagementStrategy<T extends SpotifyClie
      *
      * TODO: implement this action method. one should get a new token, the other should be used to fetch data and send it to a filter class and on to the database
      */
-    public void action();
-
-    public SpotifyClientCredentialManagementStrategy next() ;
+    public void handleCredentials(SpotifyClientCredentials credentials, SpotifyApiController spotify);
 }

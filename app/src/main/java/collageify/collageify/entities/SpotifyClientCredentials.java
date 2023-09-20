@@ -1,5 +1,7 @@
 package collageify.collageify.entities;
 
+import collageify.collageify.controller.SpotifyApiController;
+
 import java.sql.Date;
 import java.sql.Time;
 
@@ -22,7 +24,7 @@ public class SpotifyClientCredentials implements ISpotifyUserCredentials {
      * @param accessTokenExpDate sql date object representing the date at which the token expires
      * @param accessTokenExpTime sql time object representing the time at which the token will expire
      */
-    public SpotifyClientCredentials(Integer id, String refreshToken, String accessToken, Integer userID, Date accessTokenExpDate, Time accessTokenExpTime){
+    public SpotifyClientCredentials(Integer id, String refreshToken, String accessToken, Integer userID, Date accessTokenExpDate, Time accessTokenExpTime, SpotifyApiController spotify){
         this.id = id;
         this.refreshToken = refreshToken;
         this.accessToken = accessToken;
@@ -31,9 +33,10 @@ public class SpotifyClientCredentials implements ISpotifyUserCredentials {
         this.accessTokenExpTime = accessTokenExpTime;
         if(isValid()){
             this.strategy = new SpotifyClientCredentialGathererStrategy();
+            this.strategy.handleCredentials(this, spotify);
         } else {
             this.strategy = new SpotifyClientCredentialRefresherStrategy();
-            this.strategy.action();
+            this.strategy.handleCredentials(this, spotify);
         }
     }
 
@@ -68,6 +71,9 @@ public class SpotifyClientCredentials implements ISpotifyUserCredentials {
         //do we really want this 5 minute delay or whatever I understand it purpose, but it may prove un nescicary
         return millis > this.accessTokenExpDate.getTime() - 300 * 1000;
         //return millis < this.accessTokenExpDate.getTime(); this should be somewhere else
+        class validityHelpers {
+
+        }
     }
 
 

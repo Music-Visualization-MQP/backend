@@ -1,13 +1,11 @@
 package collageify.collageify.entities;
 
+import collageify.collageify.controller.SpotifyApiController;
+
 public class SpotifyClientCredentialGathererStrategy implements SpotifyClientCredentialManagementStrategy {
-    @Override
-    public void action() {
-
-    }
 
     @Override
-    public void change(SpotifyClientCredentialManagementStrategy strategy) {
+    public void handleCredentials(SpotifyClientCredentials credentials, SpotifyApiController spotify) {
 
     }
 }

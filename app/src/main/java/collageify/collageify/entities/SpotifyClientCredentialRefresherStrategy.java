@@ -1,4 +1,5 @@
 package collageify.collageify.entities;
+import collageify.collageify.controller.SpotifyApiController;
 
 public class SpotifyClientCredentialRefresherStrategy implements SpotifyClientCredentialManagementStrategy {
 
@@ -9,20 +10,9 @@ public class SpotifyClientCredentialRefresherStrategy implements SpotifyClientCr
      * TODO: implement a spotify stuff
      *
      */
-    @Override
-    public void action() {
-        synchronized (this){
-
-
-        }
-
-    }
 
     @Override
-    public SpotifyClientCredentialManagementStrategy next() {
-        if(this.isValid())
+    public void handleCredentials(SpotifyClientCredentials credentials, SpotifyApiController spotify) {
 
     }
-
-
 }
