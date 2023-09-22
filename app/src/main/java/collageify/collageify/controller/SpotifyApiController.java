@@ -1,5 +1,6 @@
 package collageify.collageify.controller;
 import collageify.collageify.entities.SpotifyClientCredentials;
+import collageify.collageify.entities.SpotifyRefreshCredentials;
 import collageify.web.exceptions.NoSPApiException;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
@@ -68,7 +69,7 @@ public class SpotifyApiController {
         }else throw new NoSPApiException("opps");*/
 
     }
-    public Optional<SpotifyClientCredentials> getNewAccessToken(SpotifyClientCredentials credentials) throws IOException, SpotifyWebApiException{
+    public Optional<SpotifyRefreshCredentials> getNewAccessToken(SpotifyClientCredentials credentials) throws IOException, SpotifyWebApiException{
         AuthorizationCodeRefreshRequest request = SpotifyApi.builder()
                 .setClientId(clientId)
                 .setClientSecret(clientSecret)
@@ -77,7 +78,7 @@ public class SpotifyApiController {
         try{
             AuthorizationCodeCredentials refreshCredentials = request.execute();
             long millis = Instant.now().toEpochMilli() + (refreshCredentials.getExpiresIn() * 1000);
-            return Optional.of(new SpotifyClientCredentials(credentials.getId(), credentials.getRefreshToken(), refreshCredentials.getAccessToken(), credentials.getUserId(), new Date(millis), new Time(millis))) ;
+            return Optional.of(new SpotifyRefreshCredentials(refreshCredentials.getAccessToken(), new Date(millis), new Time(millis))) ;
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }

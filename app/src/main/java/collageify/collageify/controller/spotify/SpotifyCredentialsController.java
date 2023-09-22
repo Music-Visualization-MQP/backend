@@ -1,5 +1,6 @@
 package collageify.collageify.controller.spotify;
 
+import collageify.collageify.controller.SpotifyApiController;
 import collageify.collageify.entities.SpotifyClientCredentials;
 import collageify.web.exceptions.NoSPApiException;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
@@ -12,7 +13,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class SpotifyCredentialsController {
 
     private SpotifyCredentialLoader sql = new SpotifyCredentialLoader();
-    private SpotifyCredentialRefresher spotify = new SpotifyCredentialRefresher();
+    private SpotifyApiController spotify = new SpotifyApiController();
     private Map<Integer, SpotifyClientCredentials> credentialsMap = Collections.synchronizedMap(new HashMap<>());
     private Map<Integer, SpotifyClientCredentials> tmpCredentialsMap = Collections.synchronizedMap(new HashMap<>());
     private Queue<SpotifyClientCredentials> tokenRefreshQueue = new ConcurrentLinkedQueue<>();

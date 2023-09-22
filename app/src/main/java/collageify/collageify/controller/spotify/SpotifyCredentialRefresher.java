@@ -28,7 +28,7 @@ public class SpotifyCredentialRefresher implements ISpotifyCredentialManagementS
         try{
             AuthorizationCodeCredentials refreshCredentials = request.execute();
             long millis = Instant.now().toEpochMilli() + (refreshCredentials.getExpiresIn() * 1000);
-            return Optional.of(new SpotifyClientCredentials(credentials.getId(), credentials.getRefreshToken(), refreshCredentials.getAccessToken(), credentials.getUserId(), new Date(millis), new Time(millis))) ;
+            return Optional.of(new SpotifyClientCredentials(credentials.getId(), credentials.getRefreshToken(), refreshCredentials.getAccessToken(), credentials.getUserId(), new Date(millis), new Time(millis), null)) ;
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }

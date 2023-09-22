@@ -9,8 +9,7 @@ public class SpotifyRefreshCredentials implements ISpotifyUserCredentials{
     private String accessToken;
     private Date date;
     private Time time;
-    private
-    SpotifyRefreshCredentials(String accessToken, Date date, Time time){
+    public SpotifyRefreshCredentials(String accessToken, Date date, Time time){
         this.date = date;
         this.time = time;
         this.accessToken = accessToken;

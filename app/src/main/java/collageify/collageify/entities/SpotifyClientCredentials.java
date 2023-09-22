@@ -1,7 +1,9 @@
 package collageify.collageify.entities;
 
 import collageify.collageify.controller.SpotifyApiController;
+import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 
+import java.io.IOException;
 import java.sql.Date;
 import java.sql.Time;
 
@@ -16,7 +18,7 @@ public class SpotifyClientCredentials implements ISpotifyUserCredentials {
     private String accessToken;
     final private Integer userID;
     private Date accessTokenExpDate;
-    final private Time accessTokenExpTime;
+    private Time accessTokenExpTime;
     private SpotifyClientCredentialManagementStrategy strategy;
 
     /**
@@ -28,7 +30,7 @@ public class SpotifyClientCredentials implements ISpotifyUserCredentials {
      * @param accessTokenExpDate sql date object representing the date at which the token expires
      * @param accessTokenExpTime sql time object representing the time at which the token will expire
      */
-    public SpotifyClientCredentials(Integer id, String refreshToken, String accessToken, Integer userID, Date accessTokenExpDate, Time accessTokenExpTime, SpotifyApiController spotify){
+    public SpotifyClientCredentials(Integer id, String refreshToken, String accessToken, Integer userID, Date accessTokenExpDate, Time accessTokenExpTime, SpotifyApiController spotify) throws IOException, SpotifyWebApiException {
         this.id = id;
         this.refreshToken = refreshToken;
         this.accessToken = accessToken;
@@ -80,6 +82,19 @@ public class SpotifyClientCredentials implements ISpotifyUserCredentials {
         //return millis < this.accessTokenExpDate.getTime(); this should be somewhere else
 
 
+    }
+
+    public void setAccessToken(String token){
+        this.accessToken = token;
+
+    }
+
+    public void setAccessTokenExpDate(Date date){
+        this.accessTokenExpDate = date;
+
+    }
+    public void setAccessTokenExpTime(Time time){
+        this.accessTokenExpTime = time;
     }
 
 

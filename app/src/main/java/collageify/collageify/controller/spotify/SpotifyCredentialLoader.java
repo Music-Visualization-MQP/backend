@@ -1,8 +1,11 @@
 package collageify.collageify.controller.spotify;
 
+import collageify.collageify.controller.SpotifyApiController;
 import collageify.collageify.entities.SpotifyClientCredentials;
 import collageify.web.exceptions.NoSPApiException;
+import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 
+import java.io.IOException;
 import java.sql.*;
 import java.util.Collections;
 import java.util.HashMap;
@@ -37,7 +40,7 @@ public class SpotifyCredentialLoader {
      * @throws SQLException
      * @throws NoSPApiException
      */
-    public Map<Integer, SpotifyClientCredentials> getAuthCredentials() throws SQLException, NoSPApiException {
+    public Map<Integer, SpotifyClientCredentials> getAuthCredentials(SpotifyApiController spotify) throws SQLException, NoSPApiException, IOException, SpotifyWebApiException {
         estConnection();
         Map<Integer, SpotifyClientCredentials> credentialsMap = Collections.synchronizedMap(new HashMap<>());
         try{
@@ -53,7 +56,7 @@ public class SpotifyCredentialLoader {
                 Time accessTokenExpTime = resultSet.getTime("access_token_exp_time");
 
                 SpotifyClientCredentials credentials = new SpotifyClientCredentials(
-                        id, refreshToken, accessToken, userID, accessTokenExpDate, accessTokenExpTime);
+                        id, refreshToken, accessToken, userID, accessTokenExpDate, accessTokenExpTime,spotify);
 
                 credentialsMap.put(id, credentials);
             }
