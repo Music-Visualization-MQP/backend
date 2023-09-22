@@ -8,11 +8,10 @@ public class SpotifyClientCredentialRefresherStrategy implements SpotifyClientCr
      *
      *
      * TODO: implement a spotify stuff
-     *
      */
 
     @Override
-    public void handleCredentials(SpotifyClientCredentials credentials, SpotifyApiController spotify) {
+    public SpotifyApiControllerResponse handleCredentials(SpotifyClientCredentials credentials, SpotifyApiController spotify) {
 
     }
 }

@@ -7,11 +7,15 @@ import java.sql.Time;
 
 
 public class SpotifyClientCredentials implements ISpotifyUserCredentials {
+
+    /**
+     * TODO: make private setters for these fields
+     */
     final private Integer id;
     final private String refreshToken;
     private String accessToken;
     final private Integer userID;
-    final private Date accessTokenExpDate;
+    private Date accessTokenExpDate;
     final private Time accessTokenExpTime;
     private SpotifyClientCredentialManagementStrategy strategy;
 
@@ -38,13 +42,15 @@ public class SpotifyClientCredentials implements ISpotifyUserCredentials {
             this.strategy = new SpotifyClientCredentialRefresherStrategy();
             this.strategy.handleCredentials(this, spotify);
         }
+
     }
 
     //getters
 
 
     @Override
-    public Integer getId() { return id; }
+    public Integer getId() {
+        return id; }
     @Override
     public String getRefreshToken() { return refreshToken; }
     @Override
@@ -69,15 +75,12 @@ public class SpotifyClientCredentials implements ISpotifyUserCredentials {
     public Boolean isValid() {
         long millis = System.currentTimeMillis();
         //do we really want this 5 minute delay or whatever I understand it purpose, but it may prove un nescicary
+
         return millis > this.accessTokenExpDate.getTime() - 300 * 1000;
         //return millis < this.accessTokenExpDate.getTime(); this should be somewhere else
-        class validityHelpers {
 
-        }
+
     }
-
-
-
 
 
     //setters

@@ -3,7 +3,7 @@ package collageify.collageify.entities;
 import java.sql.Date;
 import java.sql.Time;
 
-public abstract interface ISpotifyUserCredentials {
+public interface ISpotifyUserCredentials {
     public Integer getId();
     public String getRefreshToken();
     public String getAccessToken();
