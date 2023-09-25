@@ -78,7 +78,7 @@ public class SpotifyClientCredentials implements ISpotifyUserCredentials {
         long millis = System.currentTimeMillis();
         //do we really want this 5 minute delay or whatever I understand it purpose, but it may prove un nescicary
 
-        return millis > this.accessTokenExpDate.getTime() - 300 * 1000;
+        return millis < this.accessTokenExpDate.getTime() - 300 * 1000;
         //return millis < this.accessTokenExpDate.getTime(); this should be somewhere else
 
 
@@ -97,7 +97,33 @@ public class SpotifyClientCredentials implements ISpotifyUserCredentials {
         this.accessTokenExpTime = time;
     }
 
+    public String getStrategyName(){ return this.strategy.getStrategyName(); }
 
+    public void setStrategy(SpotifyClientCredentialManagementStrategy strategy){ this.strategy = strategy; }
+
+    /**
+     *
+     * @param spotify an instance of the spotify api controller is passed and handled by the strategy
+     * @throws IOException
+     * @throws SpotifyWebApiException
+     */
+    public void action(SpotifyApiController spotify) throws IOException, SpotifyWebApiException {
+        String g = "gatherer";
+        String r = "refresher";
+        if(this.isValid() && this.strategy.getStrategyName().equals(g)){
+            strategy.handleCredentials(this, spotify);
+        } else if(this.isValid() && !this.strategy.getStrategyName().equals(g)){
+            this.setStrategy(new SpotifyClientCredentialGathererStrategy());
+            this.strategy.handleCredentials(this, spotify);
+        } else if (!this.isValid() && this.strategy.getStrategyName().equals(g)){
+            this.setStrategy(new SpotifyClientCredentialRefresherStrategy());
+            this.strategy.handleCredentials(this, spotify);
+        } else if (!this.isValid() && !this.strategy.getStrategyName().equals(g)){
+            this.strategy.handleCredentials(this, spotify);
+
+        }
+
+    }
     //setters
 /*    public void setUuid(UUID uuid) { this.uuid = uuid; }
     public void setId(Integer id) { this.id = id; }

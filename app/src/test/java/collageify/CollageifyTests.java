@@ -5,6 +5,8 @@ package collageify;
 
 import collageify.collageify.controller.SpotifyApiController;
 import collageify.collageify.controller.spotify.SpotifyCredentialsController;
+import collageify.collageify.entities.SpotifyClientCredentialGathererStrategy;
+import collageify.collageify.entities.SpotifyClientCredentialRefresherStrategy;
 import collageify.collageify.entities.SpotifyClientCredentials;
 import collageify.web.exceptions.NoSPApiException;
 import org.junit.jupiter.api.Test;
@@ -18,7 +20,7 @@ import java.sql.Time;
 
 class CollageifyTests {
     //public SpotifyCredentialsController spotify;
-
+    public SpotifyApiController spotify;
     long millis;
     public SpotifyClientCredentials testCredentials;
 
@@ -33,9 +35,16 @@ class CollageifyTests {
     }
     public
     @Test void testGrabKeysandValidate() throws SQLException, NoSPApiException, IOException, SpotifyWebApiException {
-        /*spotify = new SpotifyCredentialsController();
-        assertEquals(spotify.keysInSet(),3);
-        assertTrue(spotify.areKeysValid());*/
+        SpotifyCredentialsController spotify = new SpotifyCredentialsController();
+        assertEquals(spotify.keysInSet(),1);
+        assertTrue(spotify.areKeysValid());
+    }
+    @Test
+    public void test() throws IOException, SpotifyWebApiException {
+
+        SpotifyClientCredentials creds = new SpotifyClientCredentials(1,System.getenv("SP_TEST_TOKEN"),null,3,new Date(System.currentTimeMillis()-100000000),new Time(System.currentTimeMillis()-100000000), spotify);
+        creds.action(spotify);
+        assertEquals(creds.getStrategyName(),"refresher");
     }
 
 

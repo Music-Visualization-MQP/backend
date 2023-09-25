@@ -24,4 +24,9 @@ public class SpotifyClientCredentialRefresherStrategy implements SpotifyClientCr
         }
 
     }
+
+    @Override
+    public String getStrategyName() {
+        return "refresher";
+    }
 }

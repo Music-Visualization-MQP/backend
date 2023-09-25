@@ -2,6 +2,7 @@ package collageify.collageify.controller.spotify;
 
 import collageify.collageify.controller.SpotifyApiController;
 import collageify.collageify.entities.SpotifyClientCredentials;
+import collageify.collageify.entities.SpotifyRefreshCredentials;
 import collageify.web.exceptions.NoSPApiException;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 
@@ -15,41 +16,40 @@ public class SpotifyCredentialsController {
     private SpotifyCredentialLoader sql = new SpotifyCredentialLoader();
     private SpotifyApiController spotify = new SpotifyApiController();
     private Map<Integer, SpotifyClientCredentials> credentialsMap = Collections.synchronizedMap(new HashMap<>());
-    private Map<Integer, SpotifyClientCredentials> tmpCredentialsMap = Collections.synchronizedMap(new HashMap<>());
     private Queue<SpotifyClientCredentials> tokenRefreshQueue = new ConcurrentLinkedQueue<>();
     public SpotifyCredentialsController() throws SQLException, NoSPApiException, IOException, SpotifyWebApiException {
-        tmpCredentialsMap = this.sql.getAuthCredentials();
+        credentialsMap = this.sql.getAuthCredentials(spotify);
         initCredentialMap();
     }
     private void initCredentialMap() throws IOException, SpotifyWebApiException {
         synchronized (this) {
-            for (Integer i : this.tmpCredentialsMap.keySet()) {
-                if (this.tmpCredentialsMap.get(i).isValid()) {
-                    this.credentialsMap.put(i, this.tmpCredentialsMap.get(i));
-                } else {
-                    Optional<SpotifyClientCredentials> refreshedCredentials = spotify.getNewAccessToken(tmpCredentialsMap.get(i));
+            for (Integer i : this.credentialsMap.keySet()) {
+                SpotifyClientCredentials credential = this.credentialsMap.get(i);
+                if (credential.isValid() && credential.equals("gatherer")) {
+                    credential.action(spotify);
+
+                } else if(credential.isValid() && !credential.equals("gatherer")) {
+                    /*Optional<SpotifyRefreshCredentials> refreshedCredentials = spotify.getNewAccessToken(credentialsMap.get(i));
                     refreshedCredentials.ifPresent(credentials -> {
-                        if (credentials.isValid()) {
-                            this.credentialsMap.put(i, credentials);
+                        if (credential.isValid()) {
+
+                            //this.credentialsMap.put(i, credentials);
                         } else {
-                            throw new RuntimeException(String.valueOf(credentials));
+                            throw new RuntimeException(String.valueOf());
                         }
-                    });
+                    });*/
                 }
             }
-            if (this.tmpCredentialsMap.keySet().size() == this.credentialsMap.keySet().size()) {
-                this.tmpCredentialsMap.clear();
+            /*
+            * this can get deleted i just need to make sure it wasnt doing something fucking weird
+            if (this.credentialsMap.keySet().size() == this.credentialsMap.keySet().size()) {
+                this.credentialsMap.clear();
             } else {
                 throw new RuntimeException("error in initialization");
-            }
+            }*/
         }
     }
 
-    void initRefreshQueue(){
-        for(Integer i : this.credentialsMap.keySet()){
-
-        }
-    }
 
 
     public void test() {
