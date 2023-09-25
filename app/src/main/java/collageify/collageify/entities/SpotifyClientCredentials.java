@@ -39,10 +39,8 @@ public class SpotifyClientCredentials implements ISpotifyUserCredentials {
         this.accessTokenExpTime = accessTokenExpTime;
         if(isValid()){
             this.strategy = new SpotifyClientCredentialGathererStrategy();
-            this.strategy.handleCredentials(this, spotify);
         } else {
             this.strategy = new SpotifyClientCredentialRefresherStrategy();
-            this.strategy.handleCredentials(this, spotify);
         }
 
     }
@@ -119,6 +117,7 @@ public class SpotifyClientCredentials implements ISpotifyUserCredentials {
             this.setStrategy(new SpotifyClientCredentialRefresherStrategy());
             this.strategy.handleCredentials(this, spotify);
         } else if (!this.isValid() && !this.strategy.getStrategyName().equals(g)){
+
             this.strategy.handleCredentials(this, spotify);
 
         }

@@ -20,14 +20,14 @@ import java.sql.Time;
 
 class CollageifyTests {
     //public SpotifyCredentialsController spotify;
-    public SpotifyApiController spotify;
+    public SpotifyApiController spotify = new SpotifyApiController();
     long millis;
     public SpotifyClientCredentials testCredentials;
 
     CollageifyTests() throws SQLException, NoSPApiException, IOException, SpotifyWebApiException {
         millis = System.currentTimeMillis();
         SpotifyApiController spotify = new SpotifyApiController();
-        testCredentials = new SpotifyClientCredentials(222, "abc", "def", 222, new Date(millis), new Time(millis),spotify);
+        testCredentials = new SpotifyClientCredentials(222, "abc", "def", 222, new Date(millis+500*1000), new Time(millis+500),spotify);
     }
     public
     @Test void testIsTokenValidate(){
@@ -37,15 +37,20 @@ class CollageifyTests {
     @Test void testGrabKeysandValidate() throws SQLException, NoSPApiException, IOException, SpotifyWebApiException {
         SpotifyCredentialsController spotify = new SpotifyCredentialsController();
         assertEquals(spotify.keysInSet(),1);
-        assertTrue(spotify.areKeysValid());
+        assertFalse(spotify.areKeysValid());
     }
     @Test
     public void test() throws IOException, SpotifyWebApiException {
-
-        SpotifyClientCredentials creds = new SpotifyClientCredentials(1,System.getenv("SP_TEST_TOKEN"),null,3,new Date(System.currentTimeMillis()-100000000),new Time(System.currentTimeMillis()-100000000), spotify);
+        SpotifyClientCredentials creds = new SpotifyClientCredentials(1, System.getenv("SP_TEST_TOKEN"),null,3,new Date(System.currentTimeMillis()-100000000),new Time(System.currentTimeMillis()-100000000), spotify);
         creds.action(spotify);
         assertEquals(creds.getStrategyName(),"refresher");
+        creds.action(spotify);
+        assertEquals(creds.getStrategyName(),"gatherer");
     }
-
+    @Test
+    public void testIsValid() throws IOException, SpotifyWebApiException {
+        SpotifyClientCredentials creds = new SpotifyClientCredentials(2,"sdf","abc",2,new Date(1), new Time(1),null);
+        assertEquals(creds.isValid(), false);
+    }
 
 }

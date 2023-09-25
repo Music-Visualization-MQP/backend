@@ -18,7 +18,7 @@ public class SpotifyCredentialsController {
     private Map<Integer, SpotifyClientCredentials> credentialsMap = Collections.synchronizedMap(new HashMap<>());
     private Queue<SpotifyClientCredentials> tokenRefreshQueue = new ConcurrentLinkedQueue<>();
     public SpotifyCredentialsController() throws SQLException, NoSPApiException, IOException, SpotifyWebApiException {
-        credentialsMap = this.sql.getAuthCredentials(spotify);
+        credentialsMap = this.sql.getAuthCredentials(this.spotify);
         initCredentialMap();
     }
     private void initCredentialMap() throws IOException, SpotifyWebApiException {
@@ -26,7 +26,7 @@ public class SpotifyCredentialsController {
             for (Integer i : this.credentialsMap.keySet()) {
                 SpotifyClientCredentials credential = this.credentialsMap.get(i);
                 if (credential.isValid() && credential.equals("gatherer")) {
-                    credential.action(spotify);
+                    credential.action(this.spotify);
 
                 } else if(credential.isValid() && !credential.equals("gatherer")) {
                     /*Optional<SpotifyRefreshCredentials> refreshedCredentials = spotify.getNewAccessToken(credentialsMap.get(i));
