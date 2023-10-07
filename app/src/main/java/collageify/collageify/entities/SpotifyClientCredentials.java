@@ -1,11 +1,16 @@
 package collageify.collageify.entities;
 
 import collageify.collageify.controller.SpotifyApiController;
+import collageify.collageify.db.SQLAccess;
+import collageify.web.exceptions.NoSPApiException;
+import org.apache.hc.core5.http.ParseException;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 
+import javax.swing.text.html.Option;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.Time;
+import java.util.Optional;
 
 
 public class SpotifyClientCredentials implements ISpotifyUserCredentials {
@@ -105,14 +110,14 @@ public class SpotifyClientCredentials implements ISpotifyUserCredentials {
      * @throws IOException
      * @throws SpotifyWebApiException
      */
-    public void action(SpotifyApiController spotify) throws IOException, SpotifyWebApiException {
+    public void action(SpotifyApiController spotify, SQLAccess sqlAccess) throws IOException, SpotifyWebApiException, NoSPApiException, ParseException {
         String g = "gatherer";
         String r = "refresher";
         if(this.isValid() && this.strategy.getStrategyName().equals(g)){
-            strategy.handleCredentials(this, spotify);
+            strategy.handleCredentials(this, spotify, sqlAccess);
         } else if(this.isValid() && !this.strategy.getStrategyName().equals(g)){
             this.setStrategy(new SpotifyClientCredentialGathererStrategy());
-            this.strategy.handleCredentials(this, spotify);
+            this.strategy.handleCredentials(this, spotify, sqlAccess);
         } else if (!this.isValid() && this.strategy.getStrategyName().equals(g)){
             this.setStrategy(new SpotifyClientCredentialRefresherStrategy());
             this.strategy.handleCredentials(this, spotify);

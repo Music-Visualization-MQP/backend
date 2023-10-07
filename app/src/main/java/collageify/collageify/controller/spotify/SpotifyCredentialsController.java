@@ -1,9 +1,12 @@
 package collageify.collageify.controller.spotify;
 
 import collageify.collageify.controller.SpotifyApiController;
+import collageify.collageify.controller.spotify.SpotifyCredentialLoader;
+import collageify.collageify.db.SQLAccess;
 import collageify.collageify.entities.SpotifyClientCredentials;
 import collageify.collageify.entities.SpotifyRefreshCredentials;
 import collageify.web.exceptions.NoSPApiException;
+import org.apache.hc.core5.http.ParseException;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 
 import java.io.IOException;
@@ -15,18 +18,19 @@ public class SpotifyCredentialsController {
 
     private SpotifyCredentialLoader sql = new SpotifyCredentialLoader();
     private SpotifyApiController spotify = new SpotifyApiController();
+    private SQLAccess sqlAccess = new SQLAccess();
     private Map<Integer, SpotifyClientCredentials> credentialsMap = Collections.synchronizedMap(new HashMap<>());
     private Queue<SpotifyClientCredentials> tokenRefreshQueue = new ConcurrentLinkedQueue<>();
-    public SpotifyCredentialsController() throws SQLException, NoSPApiException, IOException, SpotifyWebApiException {
+    public SpotifyCredentialsController() throws SQLException, NoSPApiException, IOException, SpotifyWebApiException, ParseException {
         credentialsMap = this.sql.getAuthCredentials(this.spotify);
         initCredentialMap();
     }
-    private void initCredentialMap() throws IOException, SpotifyWebApiException {
+    private void initCredentialMap() throws IOException, SpotifyWebApiException, NoSPApiException, ParseException {
         synchronized (this) {
             for (Integer i : this.credentialsMap.keySet()) {
                 SpotifyClientCredentials credential = this.credentialsMap.get(i);
                 if (credential.isValid() && credential.equals("gatherer")) {
-                    credential.action(this.spotify);
+                    credential.action(this.spotify, sqlAccess);
 
                 } else if(credential.isValid() && !credential.equals("gatherer")) {
                     /*Optional<SpotifyRefreshCredentials> refreshedCredentials = spotify.getNewAccessToken(credentialsMap.get(i));

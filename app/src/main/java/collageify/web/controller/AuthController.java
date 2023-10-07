@@ -58,7 +58,6 @@ public class AuthController {
      */
     @PostMapping("/login/authenticate")
     public ResponseEntity<String> authenticateUser(@RequestBody LoginDto loginDto){
-        //remove this this is probably bad teehee
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
                 loginDto.getUsernameOrEmail(), loginDto.getPassword());
         Authentication auth = authMgr.authenticate(token);

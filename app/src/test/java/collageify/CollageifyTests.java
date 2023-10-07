@@ -5,10 +5,11 @@ package collageify;
 
 import collageify.collageify.controller.SpotifyApiController;
 import collageify.collageify.controller.spotify.SpotifyCredentialsController;
-import collageify.collageify.entities.SpotifyClientCredentialGathererStrategy;
+import collageify.collageify.db.SQLAccess;
 import collageify.collageify.entities.SpotifyClientCredentialRefresherStrategy;
 import collageify.collageify.entities.SpotifyClientCredentials;
 import collageify.web.exceptions.NoSPApiException;
+import org.apache.hc.core5.http.ParseException;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
@@ -21,36 +22,50 @@ import java.sql.Time;
 class CollageifyTests {
     //public SpotifyCredentialsController spotify;
     public SpotifyApiController spotify = new SpotifyApiController();
+    public SQLAccess sqlAccess = new SQLAccess();
     long millis;
-    public SpotifyClientCredentials testCredentials;
+    public SpotifyClientCredentials creds0;
+    public SpotifyClientCredentials creds1 ;
+    public static SpotifyClientCredentials static_creds1 ;
 
     CollageifyTests() throws SQLException, NoSPApiException, IOException, SpotifyWebApiException {
         millis = System.currentTimeMillis();
         SpotifyApiController spotify = new SpotifyApiController();
-        testCredentials = new SpotifyClientCredentials(222, "abc", "def", 222, new Date(millis+500*1000), new Time(millis+500),spotify);
+        creds0 = new SpotifyClientCredentials(222, "abc", "def", 222, new Date(millis+500*1000), new Time(millis+500),spotify);
+         creds1 = new SpotifyClientCredentials(1, System.getenv("SP_TEST_TOKEN"),null,3,new Date(System.currentTimeMillis()-100000000),new Time(System.currentTimeMillis()-100000000), spotify);
+
     }
     public
     @Test void testIsTokenValidate(){
-        assertTrue(testCredentials.isValid());
+        assertTrue(creds0.isValid());
     }
     public
-    @Test void testGrabKeysandValidate() throws SQLException, NoSPApiException, IOException, SpotifyWebApiException {
+    @Test void testGrabKeysandValidate() throws SQLException, NoSPApiException, IOException, SpotifyWebApiException, ParseException {
         SpotifyCredentialsController spotify = new SpotifyCredentialsController();
         assertEquals(spotify.keysInSet(),1);
         assertFalse(spotify.areKeysValid());
     }
     @Test
-    public void test() throws IOException, SpotifyWebApiException {
+    public void test() throws IOException, SpotifyWebApiException, NoSPApiException, ParseException {
         SpotifyClientCredentials creds = new SpotifyClientCredentials(1, System.getenv("SP_TEST_TOKEN"),null,3,new Date(System.currentTimeMillis()-100000000),new Time(System.currentTimeMillis()-100000000), spotify);
-        creds.action(spotify);
+        creds.action(spotify, sqlAccess);
         assertEquals(creds.getStrategyName(),"refresher");
-        creds.action(spotify);
+        creds.action(spotify, sqlAccess);
         assertEquals(creds.getStrategyName(),"gatherer");
     }
     @Test
     public void testIsValid() throws IOException, SpotifyWebApiException {
         SpotifyClientCredentials creds = new SpotifyClientCredentials(2,"sdf","abc",2,new Date(1), new Time(1),null);
         assertEquals(creds.isValid(), false);
-    }
 
+    }
+    static public void main(String[] args) throws NoSPApiException, IOException, SpotifyWebApiException, ParseException {
+        SpotifyApiController static_spotify = new SpotifyApiController();
+        SQLAccess static_sql = new SQLAccess();
+        static_creds1 = new SpotifyClientCredentials(1, System.getenv("SP_TEST_TOKEN"),null,3,new Date(System.currentTimeMillis()-100000000),new Time(System.currentTimeMillis()-100000000), static_spotify);
+        static_creds1.setStrategy(new SpotifyClientCredentialRefresherStrategy());
+        static_creds1.action(static_spotify, static_sql);
+        System.out.println(static_creds1.isValid());
+        static_creds1.action(static_spotify, static_sql);
+    }
 }
