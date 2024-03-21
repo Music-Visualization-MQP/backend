@@ -16,6 +16,9 @@ plugins {
 group 'collageify'
 version '1.0'
 
+application{
+    mainClass='collageify.App'
+}
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()
@@ -29,6 +32,7 @@ dependencies {
 
     // Use JUnit Jupiter for testing.
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
 
     // you need to clean these up at some point
@@ -65,19 +69,20 @@ dependencies {
 
 }
 
+/*
 jar {
     manifest {
         attributes 'Main-Class': 'collageify.App'
     }
 }
 
-mainClassName = 'collageify.App'
+*/
 
 
-test {
-    // Use JUnit Platform for unit tests.
+/*test {
+
     useJUnitPlatform()
-}
+}*/
 
 run {
     classpath = sourceSets.main.runtimeClasspath
