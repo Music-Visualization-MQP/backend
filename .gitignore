@@ -52,4 +52,7 @@ init-jenv.sh
 /.idea/modules/app/collageify.app.main.iml
 /.idea/modules.xml
 /.idea/uiDesigner.xml
+/.idea/.gitignore
 /.idea/modules/app/code.collageify.app.main.iml
+.DS_Store
+
