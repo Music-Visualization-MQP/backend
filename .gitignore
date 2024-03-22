@@ -56,3 +56,4 @@ init-jenv.sh
 /.idea/modules/app/code.collageify.app.main.iml
 .DS_Store
 
+.env
