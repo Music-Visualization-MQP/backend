@@ -1,4 +1,4 @@
-# collageify
+# Music Visualization MQP
 
 This is a project written by Ivy Bixler.
 
