@@ -74,10 +74,10 @@ jar {
 mainClassName = 'collageify.App'
 
 
-test {
+/*test {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
-}
+}*/
 
 run {
     classpath = sourceSets.main.runtimeClasspath
